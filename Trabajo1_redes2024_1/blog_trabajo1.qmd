@@ -1,0 +1,484 @@
+---
+title: "Optimización heurística"
+author:
+  - name: Ronald Gabriel Palencia
+    email: ropalencia@unal.edu.co
+  - name: Junior Antonio Muños Henao
+    email: jmunozhe@unal.edu.co
+
+format:
+  html:
+    code-fold: true
+jupyter: python3
+echo: false
+theme:
+          light: flatly
+          dark: darkly
+toc: true
+appendix-style: default
+---
+
+## **Parte 1: optimización numérica**
+Considere las siguientes funciones de prueba:
+  * Función de Rosenbrock
+  * Función de Rastrigin
+  * Función de Schwefel.
+  * Función de Griewank
+  * Función Goldstein-Price
+  * Función de las seis jorobas de camello ()
+
+1. Escoja dos funciones de prueba
+2. Optimice las funciones en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria
+3. Optimice las funciones en dos y tres dimensiones usando: algoritmos evolutivos, optimización de partículas y evolución diferencial
+4. Represente con un gif animado o un video el proceso de optimización de descenso por gradiente y el proceso usando el método heurístico.
+
+
+```{python}
+
+#!pip install pygad
+#!pip install numpy
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+from matplotlib import animation, rc
+from IPython.display import HTML;
+import pygad
+rc('animation', html='html5');
+```
+## 1. Funciones de Prueba
+
+La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:
+
+* Función de Rastrigin
+* Función de Schwefel
+
+
+```{python}
+# Se implementa la función de Rastrigin vectorizada para arreglos numpy
+def Rastrigin(X):
+  Y = 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+  return Y
+
+# Se implementa la función de Schwefel vectorizada para arreglos numpy
+def Schwefel(X):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    return(Y)
+
+# Visualización de la función de Rastrigin en 2D
+ncols = 100
+nrows = 100
+X1 = np.linspace(-5.12, 5.12, ncols)
+Y1 = np.linspace(-5.12, 5.12, nrows)
+X1, Y1 = np.meshgrid(X1, Y1)
+
+Z1 = [Rastrigin(np.array([X1[i,j], Y1[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z1 = np.array(Z1).reshape([nrows,ncols])
+
+fig, (ax1,ax2) = plt.subplots(1,2)
+fig.set_size_inches(13,5)
+contorno = ax1.contourf(X1,Y1,Z1)
+ax1.set_title("Función de Rastrigin")
+fig.colorbar(contorno, ax=ax1)
+fig.subplots_adjust(wspace=1.5)
+
+# Visualización de la función de Schwefel en 2D
+X2 = np.linspace(-512, 512, ncols*10)
+Y2 = np.linspace(-512, 512, nrows*10)
+X2, Y2 = np.meshgrid(X2, Y2)
+Z2 = [Schwefel(np.array([X2[i,j], Y2[i,j]])) for i in range(nrows*10) for j in range(ncols*10)]
+Z2 = np.array(Z2).reshape([nrows*10,ncols*10])
+contorno2 = ax2.contourf(X2,Y2,Z2)
+fig.colorbar(contorno2, ax=ax2)
+ax2.set_title("Función de Schewfel")
+
+
+plt.tight_layout()
+plt.show()
+```
+
+
+## 2. Optimización mediante descenso por gradiente
+
+
+
+A continuación se implementan las funciones para hallar el gradiente y la función pra optimizar mediante descenso por gradiente
+
+
+```{python}
+# La siguiente función implementa el cálculo del gradiente usando 'list comprehension'
+def num_grad(x, fun, h=0.01):
+    return np.array([(fun(x+e*h) - fun(x-e*h)) / (2*h) for e in np.eye(len(x))])
+
+# La siguiente función implmenta la optimización mediante descenso por gradiente
+def optimizador_mult_numdev(f, x0, eta=0.01, tol=1e-6, max_iter=1e3):
+    x = np.array(x0)
+    iter = 0
+    while np.linalg.norm(num_grad(x, f, h=0.01)) > tol and iter < max_iter:
+        x = x - eta*num_grad(x, f, h=0.01)
+        iter += 1
+    return x
+```
+
+### 2.1 Función de Rastrigin
+
+#### Generación del gráfico
+
+Se procede a definir las características del gráfico que representará todo.
+
+
+
+```{python}
+# Particionamiento del rango de cada variable
+ncols = 100
+nrows = 100
+X = np.linspace(-3.12, 3.12, ncols)  #Posibles valores de X
+Y = np.linspace(-3.12, 3.12, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [Rastrigin(np.array([X[i,j], Y[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Rastrigin')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+
+
+
+Aquí optimizamos para hallar el mínimo de la función, y de paso animamos los datos en el gráfico anteriormente elaborado
+
+
+```{python}
+# Implementación del método de descenso por gradiente
+x0 = np.array([4*np.random.random()-1,4*np.random.random()-1])
+xs = [x0]
+for i in range(25):
+    x_new = optimizador_mult_numdev(Rastrigin, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*xs[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+```
+
+
+### 2.2 Función de Schwefel
+
+[texto del vínculo](https://)Con las funciones de derivadas parciales y 
+
+de optimización ya implementadas, sólo resta recalcular los datos para la función de Schwefel y generar el gráfico.
+
+
+
+```{python}
+# Particionamiento del rango de cada variable
+ncols = 1000
+nrows = 1000
+X = np.linspace(-512, 512, ncols)  #Posibles valores de X
+Y = np.linspace(-512, 512, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [Schwefel(np.array([X[i,j], Y[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Schwefel')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+Ahora optimizamos y animamos los resultados en el gráfico anteriormente elaborado
+
+
+```{python}
+
+# Implementación del método de descenso por gradiente
+x0 = np.array([300*(2*np.random.random()-1),300*(2*np.random.random()-1)]) # generación de un punto aleatorio
+xs = [x0]
+for i in range(25):
+    x_new = optimizador_mult_numdev(Schwefel, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*xs[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+
+```
+
+## 3. Optimización mediante algoritmos evolutivos
+
+### **- Modificación de las funciones de prueba iniciales**
+
+Aquí modificamos las definiciones de las funciones de prueba para que se ajusten a nuestro algoritmo evolutivo
+
+
+```{python}
+# Se implementa la función de Rastrigin vectorizada para arreglos numpy
+def Rastrigin_ga(X,solutionidx, ga_instance):
+  Y = 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+  fitness = -Y
+  return (fitness)
+
+# Se implementa la función de Schwefel vectorizada para arreglos numpy
+def Schwefel_ga(X,solutionidx, ga_instance):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    fitness = -Y
+    return(fitness)
+```
+
+### 3.1 Función de Rastrigin
+
+#### - Optimización de la función de Rastrigin
+
+Aquí se crea una instancia de nuestro algoritmo genético usando pygad para optimizar la función de Rastrigin.
+
+Especificaciones de los parámetros:
+
+* Se usa un número de generaciones de 60
+* Se emparejan 2 individuos en cada generación
+* La función de ajuste será nuestra función de prueba
+* Se tomarán 9 individuos en cada generación
+* El criterio de selección de reproducción : mejores individuos
+* Tipo de mutación: Aleatoria
+
+
+```{python}
+# Corrección: Asegúrate de que la función acepte tres parámetros: la instancia de GA, una solución y su índice.
+def Rastrigin_ga(ga_instance, solution, solution_idx):
+    Y = 10 * len(solution) + np.sum(solution ** 2 - 10 * np.cos(2 * np.pi * solution))
+    fitness = -Y  # El negativo se usa porque PyGAD busca maximizar la aptitud, y Rastrigin se minimiza.
+    return fitness
+
+  
+# Configuración de la instancia GA ajustada a PyGAD 2.20.0
+ga_instance_rastrigin = pygad.GA(num_generations=60,
+                                 num_parents_mating=2,
+                                 fitness_func=Rastrigin_ga,
+                                 sol_per_pop=9,
+                                 num_genes=2,
+                                 init_range_low=-5,
+                                 init_range_high=4,
+                                 parent_selection_type="sss",
+                                 keep_parents=1,
+                                 crossover_type="single_point",
+                                 mutation_type="random",
+                                 mutation_percent_genes=10,
+                                 save_solutions=True)
+```
+
+Una vez creada la instancia de nuestro algoritmo, ejecutamos la optimización mediante el algoritmo evolutivo y mostramos la evolución del ajuste generación tras generación
+
+
+
+```{python}
+ga_instance_rastrigin.run()
+soluciones_rastrigin = ga_instance_rastrigin.solutions
+ga_instance_rastrigin.plot_fitness()
+plt.show()
+```
+
+#### - Muestra de gráficos
+
+Generamos un gráfico nuevamente para nuestra función de prueba
+
+
+```{python}
+# Se implementa la función de Rastrigin vectorizada para arreglos numpy
+def Rastrigin_ga(X,solutionidx):
+  Y = 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+  fitness = -Y
+  return (fitness)
+
+  # Particionamiento del rango de cada variable
+ncols = 100
+nrows = 100
+X = np.linspace(-9.12, 9.12, ncols)  #Posibles valores de X
+Y = np.linspace(-9.12, 9.12, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [-Rastrigin_ga(np.array([X[i,j], Y[i,j]]),1) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Rastrigin')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+Y animamos los resultados obtenidos después de aplicar el algoritmo evolutivo
+
+
+```{python}
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*soluciones_rastrigin[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+```
+
+### 3.2 Función de Schwefel
+
+
+#### - Optimización de la función de Schwefel
+
+Aquí se crea una instancia de nuestro algoritmo genético usando pygad para optimizar la función de Schwefel.
+
+Especificaciones de los parámetros:
+
+* Se usa un número de generaciones de 60
+* Se emparejan 2 individuos en cada generación
+* La función de ajuste será nuestra función de prueba
+* Se tomarán 9 individuos en cada generación
+* El criterio de selección de reproducción : mejores individuos
+* Tipo de mutación: Aleatoria
+
+```{python}
+import numpy as np
+import pygad
+import matplotlib.pyplot as plt
+
+# Ajustamos la función de Schwefel para que acepte los tres parámetros requeridos.
+def Schwefel_ga(ga_instance, solution, solution_idx):
+    Y = np.sum(solution * np.sin(np.sqrt(np.abs(solution))))
+    fitness = -Y  # Negativo ya que buscamos minimizar la función de Schwefel
+    return fitness
+
+# Configuración de la instancia de GA con los ajustes necesarios
+ga_instance_schwefel = pygad.GA(num_generations=60,
+                                num_parents_mating=2,
+                                fitness_func=Schwefel_ga,
+                                sol_per_pop=9,
+                                num_genes=2,
+                                init_range_low=-500,
+                                init_range_high=500,
+                                parent_selection_type="sss",
+                                keep_parents=1,
+                                crossover_type="single_point",
+                                mutation_type="random",
+                                mutation_percent_genes=10,
+                                save_solutions=True)
+
+
+
+```
+
+Una vez creada la instancia de nuestro algoritmo, en este caso para Schwefel, ejecutamos la optimización mediante el algoritmo evolutivo y mostramos la evolución del ajuste generación tras generación
+
+
+```{python}
+# Ejecutar la instancia de GA
+ga_instance_schwefel.run()
+
+# Obtener y mostrar la mejor solución
+solution, solution_fitness, solution_idx = ga_instance_schwefel.best_solution()
+print(f"Best Solution: {solution}")
+print(f"Best Solution Fitness: {solution_fitness}")
+
+# Opcional: Graficar la evolución de la fitness a lo largo de las generaciones
+ga_instance_schwefel.plot_fitness()
+
+# Mostrar el gráfico (en caso de estar usando Jupyter Notebook o un entorno que lo permita)
+plt.show()
+```
+
+#### - Muestra de gráficos
+
+Generamos un gráfico nuevamente para nuestra función de prueba
+
+
+```{python}
+soluciones_schwefel = ga_instance_schwefel.best_solution()
+# Se implementa la función de Schwefel vectorizada para arreglos numpy
+def Schwefel_ga(X,solutionidx):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    fitness = -Y
+    return(fitness)
+# Particionamiento del rango de cada variable
+ncols = 100
+nrows = 100
+X = np.linspace(-512, 512, ncols)  #Posibles valores de X
+Y = np.linspace(-512, 512, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [Schwefel_ga(np.array([X[i,j], Y[i,j]]),1) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Schwefel')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+Y animamos los resultados obtenidos después de aplicar el algoritmo evolutivo
+
+
+```{python}
+
+soluciones_schwefel = ga_instance_schwefel.best_solution()
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*soluciones_schwefel[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+```
