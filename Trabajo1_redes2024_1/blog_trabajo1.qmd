@@ -17,19 +17,111 @@ theme:
 toc: true
 appendix-style: default
 ---
+# **Optimzación Heurìstica**
+
+## Introdución
+
+
+La optimización heurística engloba un conjunto de métodos destinados a encontrar soluciones aproximadas a problemas de optimización que son demasiado complejos para los enfoques analíticos tradicionales, como aquellos basados en el cálculo de gradientes. A diferencia de los métodos determinísticos, que procuran soluciones exactas bajo supuestos matemáticos estrictos sobre las funciones objetivo, los enfoques heurísticos exploran el espacio de soluciones de manera estratégica para encontrar soluciones satisfactorias sin garantizar necesariamente el óptimo global. Estos enfoques resultan particularmente valiosos en situaciones donde la función objetivo es discontinua, no diferenciable, altamente compleja, o cuando el espacio de búsqueda es tan amplio que hace inviable una exploración exhaustiva.
+
+Dentro de los métodos heurísticos más destacados y empleados se hallan los algoritmos evolutivos y las colonias de hormigas, ambos inspirados en fenómenos biológicos.
+
+**Algoritmos Evolutivos**
+
+Los algoritmos evolutivos son inspirados por el proceso de evolución biológica y selección natural, operando mediante un ciclo de selección, cruzamiento, y mutación en una población de soluciones candidatas (Mitchell, 1998). Cada solución es evaluada a través de una función de aptitud, determinando su probabilidad de ser seleccionada para la generación de nuevas soluciones. Este ciclo permite que, con el tiempo, las soluciones más aptas predominen, dirigiendo al algoritmo hacia una solución óptima o satisfactoria.
+
+**Colonias de Hormigas**
+
+Por su parte, las colonias de hormigas simulan el comportamiento colectivo de las hormigas en su búsqueda de alimentos, donde cada hormiga explora el espacio de soluciones siguiendo caminos marcados por feromonas, sustancias químicas que permiten la comunicación entre ellas (Dorigo, Maniezzo, & Colorni, 1996). Las rutas con concentraciones más altas de feromonas atraen a más hormigas, favoreciendo la exploración de soluciones prometedoras a través de un proceso de realimentación positiva.
+
+**Aplicación de Métodos Heurísticos**
+
+La aplicación de métodos heurísticos para la optimización de funciones de prueba implica varios pasos clave, comenzando por la definición precisa de la función de prueba que representa el problema de optimización. La elección del método heurístico adecuado depende de las características del problema, incluyendo la naturaleza de la función objetivo y las peculiaridades del espacio de búsqueda. La configuración de los parámetros del algoritmo, como el tamaño de la población en los algoritmos evolutivos o el número de hormigas en las colonias de hormigas, es fundamental para la efectividad del método. Posteriormente, se ejecuta el algoritmo y se monitorea su progreso, realizando ajustes en los parámetros según sea necesario para optimizar los resultados.
+
+El empleo de métodos heurísticos en la optimización presenta una alternativa robusta y adaptable para abordar problemas complejos, ofreciendo soluciones aproximadas cuando los enfoques convencionales resultan inadecuados o ineficaces. La inspiración en procesos naturales no solo proporciona una perspectiva innovadora para la resolución de problemas de optimización sino que también abre nuevas posibilidades de investigación y aplicación en áreas como ingeniería, economía, y ciencia de datos.
+
+
+
+
 
 ## **Parte 1: optimización numérica**
+
+
 Considere las siguientes funciones de prueba:
-  * Función de Rosenbrock
-  * Función de Rastrigin
-  * Función de Schwefel.
-  * Función de Griewank
-  * Función Goldstein-Price
-  * Función de las seis jorobas de camello ()
+
+**Función de Rosenbrock**
+
+La **Función de Rosenbrock** es conocida por su valle en forma de banana que contiene el mínimo global. Se define como:
+
+$$
+f(x_1, x_2) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2
+$$
+
+con $x_i \in [-2.048, 2.048]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 1$ y $x_2 = 1$.
+
+**Función de Rastrigin**
+
+La **Función de Rastrigin** es una función no convexa utilizada como problema de prueba de rendimiento para algoritmos de optimización debido a su gran cantidad de mínimos locales. Se define como:
+
+$$
+f(x_1, x_2) = 20 + \sum_{i=1}^{2}(x_i^2 - 10 \cos(2\pi x_i))
+$$
+
+con $x_i \in [-5.12, 5.12]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función de Schwefel**
+
+La **Función de Schwefel** es conocida por su complejidad y su paisaje de búsqueda desafiante. Se define como:
+
+$$
+f(x_1, x_2) = 418.9829 \times 2 - \sum_{i=1}^{2}x_i \sin(\sqrt{|x_i|})
+$$
+
+con $x_i \in [-500, 500]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 420.9687$ y $x_2 = 420.9687$.
+
+**Función de Griewank**
+
+La **Función de Griewank** a menudo se utiliza para probar la eficacia de algoritmos de optimización en tratar con oscilaciones grandes y numerosos óptimos locales. Se define como:
+
+$$
+f(x_1, x_2) = \frac{1}{4000}\sum_{i=1}^{2}x_i^2 - \prod_{i=1}^{2}\cos(\frac{x_i}{\sqrt{i}}) + 1
+$$
+
+con $x_i \in [-600, 600]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función Goldstein-Price**
+
+La **Función Goldstein-Price** es conocida por tener un valle estrecho que conduce al mínimo global. Se define como:
+
+$$
+\begin{align*}
+f(x_1, x_2) = & [1 + (x_1 + x_2 + 1)^2(19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)]\\
+& \times [30 + (2x_1 - 3x_2)^2(18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)]
+\end{align*}
+$$
+
+con $x_i \in [-2, 2]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = -1$.
+
+**Función de las seis jorobas de camello (Six-Hump Camel Back)**
+
+La **Función de las seis jorobas de camello** es una función de prueba que presenta dos mínimos globales. Se define como:
+
+$$
+f(x_1, x_2) = (4 - 2.1x_1^2 + \frac{x_1^4}{3})x_1^2 + x_1x_2 + (-4 + 4x_2^2)x_2^2
+$$
+
+con \(x_1 \in [-3, 3]\) y \(x_2 \in [-2, 2]\). Alcanza su valor mínimo en \(x_1 = -0.0898\) y \(x_2 = 0.7126\), y también en \(x_1 = 0.0898\) y \(x_2 = 0.7126\).
+
+
+**Teniendo en cuanta las anteriores funciones realizar los siguientes items:**
+
 
 1. Escoja dos funciones de prueba
+
 2. Optimice las funciones en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria
+
 3. Optimice las funciones en dos y tres dimensiones usando: algoritmos evolutivos, optimización de partículas y evolución diferencial
+
 4. Represente con un gif animado o un video el proceso de optimización de descenso por gradiente y el proceso usando el método heurístico.
 
 
@@ -48,9 +140,10 @@ rc('animation', html='html5');
 ```
 ## 1. Funciones de Prueba
 
-La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:
+**La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:**
 
 * Función de Rastrigin
+
 * Función de Schwefel
 
 
@@ -98,11 +191,80 @@ plt.show()
 ```
 
 
+**Función de Rastrigin (izquierda):**
+
+La gráfica muestra una superficie repleta de picos y valles regulares y simétricos, característicos de la Función de Rastrigin. Esta función es conocida por su gran número de mínimos locales que dificultan encontrar el mínimo global. Los colores más oscuros representan valores más bajos de la función, y los más claros, valores más altos. El patrón periódico de los mínimos locales es claramente visible y sugiere la complejidad de utilizar métodos de optimización que no se basan en gradientes para encontrar el óptimo global, que se sitúa en el centro de la gráfica donde se observa un mínimo profundo y distinto.
+
+**Función de Schwefel (derecha):**
+
+La gráfica para la Función de Schwefel muestra una estructura más compleja con una serie de anillos concéntricos que representan los niveles de la función. La Función de Schwefel es conocida por tener un mínimo global pronunciado, pero rodeado de zonas que llevan a mínimos locales subóptimos, lo cual puede engañar a los algoritmos de búsqueda. Los valores más bajos en esta función se indican con un color oscuro, ubicados cerca del centro de la gráfica, que es donde se encuentra el mínimo global. La amplia gama de colores refleja la amplia variedad de valores que la función puede tomar, lo que indica un paisaje de optimización desafiante con múltiples mínimos locales.
+
+
+**Visualización en 3D**
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Definición de las funciones
+def Rastrigin(X):
+    return 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+
+def Schwefel(X):
+    return 418.9829 * len(X) - np.sum(X * np.sin(np.sqrt(np.abs(X))))
+
+# Creación de la malla para graficar
+ncols, nrows = 100, 100
+X1 = np.linspace(-5.12, 5.12, ncols)
+Y1 = np.linspace(-5.12, 5.12, nrows)
+X1, Y1 = np.meshgrid(X1, Y1)
+Z1 = np.array([Rastrigin(np.array([x, y])) for x, y in zip(np.ravel(X1), np.ravel(Y1))])
+Z1 = Z1.reshape(X1.shape)
+
+# Graficar Rastrigin en 3D
+fig = plt.figure(figsize=(14, 7))
+
+# Rastrigin
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.plot_surface(X1, Y1, Z1, cmap='viridis')
+ax1.set_title("Función de Rastrigin")
+ax1.set_xlabel('X1')
+ax1.set_ylabel('Y1')
+ax1.set_zlabel('Z1')
+
+# Ajuste para la función de Schwefel
+ncols, nrows = 1000, 1000
+X2 = np.linspace(-500, 500, ncols)
+Y2 = np.linspace(-500, 500, nrows)
+X2, Y2 = np.meshgrid(X2, Y2)
+Z2 = np.array([Schwefel(np.array([x, y])) for x, y in zip(np.ravel(X2), np.ravel(Y2))])
+Z2 = Z2.reshape(X2.shape)
+
+# Schwefel
+ax2 = fig.add_subplot(122, projection='3d')
+ax2.plot_surface(X2, Y2, Z2, cmap='viridis')
+ax2.set_title("Función de Schwefel")
+ax2.set_xlabel('X2')
+ax2.set_ylabel('Y2')
+ax2.set_zlabel('Z2')
+
+plt.tight_layout()
+plt.show()
+
+```
+
+Las gráficas 3D muestran claramente la topología de las funciones de Rastrigin y Schwefel. Rastrigin tiene un paisaje ondulado con numerosos mínimos locales, mientras que Schwefel presenta un paisaje más suave con un mínimo global prominente. Estas visualizaciones resaltan la complejidad inherente a cada función
+
+
 ## 2. Optimización mediante descenso por gradiente
 
 
 
-A continuación se implementan las funciones para hallar el gradiente y la función pra optimizar mediante descenso por gradiente
+A continuación, presentamos las implementaciones de las funciones necesarias para calcular el gradiente. Además, introducimos el método de descenso por gradiente, una técnica de optimización que utilizaremos para hallar los mínimos de las funciones objetivo. Este enfoque iterativo nos permitirá afinar progresivamente nuestras estimaciones hacia el punto de óptimo global.
+
+
 
 
 ```{python}
@@ -127,6 +289,20 @@ def optimizador_mult_numdev(f, x0, eta=0.01, tol=1e-6, max_iter=1e3):
 Se procede a definir las características del gráfico que representará todo.
 
 
+ ```{python}
+
+ x0 = np.array([4*np.random.random()-1,4*np.random.random()-1])
+ xs = [x0]
+
+ for i in range(25):
+    x_new = optimizador_mult_numdev(Rastrigin, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+ ```
+
+
+
 
 ```{python}
 # Particionamiento del rango de cada variable
@@ -144,7 +320,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(10,7)
 contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
 contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
-line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+line, = ax.plot(xs[-1][0], xs[-1][1], 'xr--',mec='b', markersize=10) #Creando la línea que contendrá los puntos
               # de la animación de Optimización
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -156,18 +332,12 @@ plt.show()
 
 
 
-
-Aquí optimizamos para hallar el mínimo de la función, y de paso animamos los datos en el gráfico anteriormente elaborado
+En el gráfico anterior, se destaca el punto que representa el mínimo encontrado a través del método de descenso por gradiente. A continuación, presentaremos un GIF animado que muestra el conjunto de soluciones halladas en cada iteración del proceso hasta alcanzar la solución óptima. Esta visualización animada brinda una perspectiva clara y dinámica de cómo el algoritmo de descenso por gradiente avanza iterativamente a través del espacio de soluciones, acercándose paso a paso al punto de mínimo global de la función de Rastrigin. Este enfoque no solo facilita la comprensión del proceso de optimización, sino que también ilustra de manera efectiva la eficacia del algoritmo en la búsqueda de soluciones óptimas.
 
 
 ```{python}
-# Implementación del método de descenso por gradiente
-x0 = np.array([4*np.random.random()-1,4*np.random.random()-1])
-xs = [x0]
-for i in range(25):
-    x_new = optimizador_mult_numdev(Rastrigin, x0)
-    xs.append(x_new)
-    x0 = x_new
+
+
 
 # Definición de la función graficadora
 def graficar(frame):
@@ -175,11 +345,11 @@ def graficar(frame):
     line.set_data(x, y)
     return line,
 
+
 # Animación final
 ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
 ani
 ```
-
 
 ### 2.2 Función de Schwefel
 
@@ -392,11 +562,11 @@ def Schwefel_ga(ga_instance, solution, solution_idx):
     return fitness
 
 # Configuración de la instancia de GA con los ajustes necesarios
-ga_instance_schwefel = pygad.GA(num_generations=60,
+ga_instance_schwefel = pygad.GA(num_generations=80,
                                 num_parents_mating=2,
                                 fitness_func=Schwefel_ga,
                                 sol_per_pop=9,
-                                num_genes=2,
+                                num_genes=30,
                                 init_range_low=-500,
                                 init_range_high=500,
                                 parent_selection_type="sss",
@@ -471,14 +641,11 @@ Y animamos los resultados obtenidos después de aplicar el algoritmo evolutivo
 
 ```{python}
 
-soluciones_schwefel = ga_instance_schwefel.best_solution()
-# Definición de la función graficadora
-def graficar(frame):
-    x, y = zip(*soluciones_schwefel[:frame+1])
-    line.set_data(x, y)
-    return line,
+soluciones_schwefel = (soluciones_schwefel[0],)
 
-# Animación final
-ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+# Ahora pasas soluciones_schwefel a tu función de animación
+# Suponiendo que 'fig' y 'line' ya están definidos correctamente en tu código
+ani = animation.FuncAnimation(fig, lambda frame: graficar(soluciones_schwefel), frames=23, interval=300)
 ani
 ```
+
