@@ -547,8 +547,10 @@ ani
 
 ### Optimización en 3D
 
+La optimización en tres dimensiones de la función de Schwefel no consigue ubicar el mínimo global, sin embargo, evidencia un avance significativo hacia este. La gráfica subsiguiente ilustra la secuencia de puntos descubiertos durante el proceso de optimización, lo cual demuestra el progresivo acercamiento hacia la región de mínimo valor en la función objetivo.
+
 ```{python}
-!pip install plotly
+#!pip install plotly
 ```
 
 ```{python}
@@ -567,6 +569,7 @@ xs = np.array(xs)  # Convertir a un array de Numpy para facilitar la manipulaci�
 ```
 
 ```{python}
+
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
 
@@ -582,6 +585,13 @@ ax.legend()
 plt.show()
 
 ```
+
+
+Mediante la visualización interactiva en tres dimensiones, se confirma que, al igual que en el caso bidimensional, el optimizador no alcanza el mínimo global de la función de Schwefel. Este resultado es consecuencia de la abundancia de mínimos locales que caracterizan a esta función. No obstante, es interesante observar que, pese a la selección aleatoria del punto inicial, el optimizador no queda atrapado en ninguno de estos mínimos locales, lo cual sugiere una dinámica de búsqueda que consigue evitar estancamientos prematuros en la exploración del espacio de soluciones.
+
+
+
+
 
 ```{python}
 import plotly.graph_objs as go
@@ -618,61 +628,10 @@ fig.show()
 
 ```
 
-```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-def Schwefel(x):
-    return 418.9829 * len(x) - sum(x[i] * np.sin(np.sqrt(abs(x[i]))) for i in range(len(x)))
-
-def num_grad(x, fun, h=1e-4):
-    return np.array([(fun(x + e * h) - fun(x - e * h)) / (2 * h) for e in np.eye(len(x))])
-
-def optimizador_mult_numdev(f, x0, eta=0.0001, tol=1e-6, max_iter=1e4):
-    x = np.array(x0)
-    iter = 0
-    while np.linalg.norm(num_grad(x, f)) > tol and iter < max_iter:
-        x = x - eta * num_grad(x, f)
-        iter += 1
-    return x
-
-np.random.seed(42)
-# Punto inicial aleatorio en 3D
-x0 = np.array([500*(2*np.random.random()-1) for _ in range(3)])
-x_opt = optimizador_mult_numdev(Schwefel, x0, eta=0.0001, tol=1e-6, max_iter=10000)
-
-# Generar una malla de puntos para graficar la función
-x = np.linspace(-500, 500, 100)
-y = np.linspace(-500, 500, 100)
-X, Y = np.meshgrid(x, y)
-Z = np.array([Schwefel([X[i][j], Y[i][j]]) for i in range(X.shape[0]) for j in range(X.shape[1])])
-Z = Z.reshape(X.shape)
-
-# Graficar la función en 3D
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis', alpha=0.8)
-
-# Graficar el punto optimizado
-ax.scatter(x_opt[0], x_opt[1], Schwefel(x_opt), color='r', s=50, label='Punto optimizado')
-
-ax.set_title('Función de Schwefel y Punto Optimizado')
-ax.set_xlabel('X1')
-ax.set_ylabel('X2')
-ax.set_zlabel('Valor de función')
-ax.legend()
-
-plt.show()
-
-```
 
 
 ## 3. Optimización mediante algoritmos evolutivos
 
-### **- Modificación de las funciones de prueba iniciales**
-
-Aquí modificamos las definiciones de las funciones de prueba para que se ajusten a nuestro algoritmo evolutivo
 
 
 ```{python}
@@ -693,19 +652,38 @@ def Schwefel_ga(X,solutionidx, ga_instance):
 
 #### - Optimización de la función de Rastrigin
 
-Aquí se crea una instancia de nuestro algoritmo genético usando pygad para optimizar la función de Rastrigin.
+Se configura un algoritmo genético mediante la biblioteca PyGAD para la optimización de la función de Rastrigin. La configuración se detalla de la siguiente manera:
 
-Especificaciones de los parámetros:
+* El algoritmo iterará a través de 60 generaciones.
 
-* Se usa un número de generaciones de 60
-* Se emparejan 2 individuos en cada generación
-* La función de ajuste será nuestra función de prueba
-* Se tomarán 9 individuos en cada generación
-* El criterio de selección de reproducción : mejores individuos
-* Tipo de mutación: Aleatoria
+* En cada generación se cruzarán dos individuos.
+
+* La función objetivo que guiará la adaptación de los individuos es la propia función de Rastrigin.
+
+* Cada generación estará compuesta por una población de 9 individuos.
+
+* La selección para la reproducción se basará en la elección de los individuos más aptos.
+
+* La mutación de los individuos seguirá una estrategia aleatoria.
+
+* Esta configuración establece los parámetros operativos fundamentales del algoritmo genético y se orienta a la optimización efectiva de la compleja función de Rastrigin.
 
 
-```{python}
+ga_instance_rastrigin = pygad.GA(num_generations=60,
+                                 num_parents_mating=2,
+                                 fitness_func=Rastrigin_ga,
+                                 sol_per_pop=9,
+                                 num_genes=2,
+                                 init_range_low=-5,
+                                 init_range_high=4,
+                                 parent_selection_type="sss",
+                                 keep_parents=1,
+                                 crossover_type="single_point",
+                                 mutation_type="random",
+                                 mutation_percent_genes=10,
+                                 save_solutions=True)
+
+```{python, warning = false}
 # Corrección: Asegúrate de que la función acepte tres parámetros: la instancia de GA, una solución y su índice.
 def Rastrigin_ga(ga_instance, solution, solution_idx):
     Y = 10 * len(solution) + np.sum(solution ** 2 - 10 * np.cos(2 * np.pi * solution))
@@ -740,9 +718,14 @@ ga_instance_rastrigin.plot_fitness()
 plt.show()
 ```
 
+En la gráfica anterior, se puede observar la trayectoria de optimización del algoritmo genético PyGAD en función del número de generaciones. Se aprecia una marcada mejora en la aptitud durante las etapas iniciales, con un rápido incremento hacia valores más óptimos. Este progreso temprano sugiere que el algoritmo es eficiente en la identificación de soluciones prometedoras desde el principio. Tras esta fase de mejoras significativas, la curva se nivela, lo cual indica que el algoritmo ha llegado a un punto de convergencia y se están haciendo menos descubrimientos de nuevas soluciones óptimas a medida que avanza el número de generaciones. La estabilidad de la aptitud hacia el final de las iteraciones sugiere que se ha alcanzado un punto cercano al óptimo, donde las subsiguientes evoluciones ofrecen ganancias marginales en el desempeño o aptitud del modelo.
+
 #### - Muestra de gráficos
 
-Generamos un gráfico nuevamente para nuestra función de prueba
+
+La gráfica siguiente exhibe el punto óptimo encontrado por el algoritmo genético, marcado con una 'X', situado en una zona de bajo valor, que indica un rendimiento superior en la tarea de optimización en comparación con el método de descenso por gradiente. Este resultado resalta la habilidad del algoritmo genético para evitar los mínimos locales y dirigirse hacia una solución más cercana al mínimo global, lo que demuestra su eficacia en la exploración del espacio de soluciones y su ventaja sobre métodos basados en el gradiente en escenarios de optimización complejos.
+
+
 
 
 ```{python}
@@ -767,7 +750,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(10,7)
 contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
 contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
-line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+line, = ax.plot(soluciones_rastrigin[-1][0], soluciones_rastrigin[-1][1], 'xr--',mec='b', markersize=20) #Creando la línea que contendrá los puntos
               # de la animación de Optimización
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -777,8 +760,7 @@ plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
 plt.show()
 ```
 
-Y animamos los resultados obtenidos después de aplicar el algoritmo evolutivo
-
+La animación de la optimización llevada a cabo por el algoritmo genético proporciona una perspectiva detallada del proceso evolutivo y su trayectoria hacia la obtención de una solución altamente eficiente. A lo largo de la secuencia animada, se puede apreciar cómo el algoritmo progresa, generación tras generación, acercándose a una ubicación que converge hacia el mínimo global. Es notable cómo la mayoría de los valores identificados en cada generación se acumulan en las inmediaciones del óptimo, lo que evidencia la capacidad del algoritmo genético para centrar su búsqueda en la zona más prometedora del espacio de soluciones.
 
 ```{python}
 # Definición de la función graficadora
@@ -791,6 +773,9 @@ def graficar(frame):
 ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
 ani
 ```
+
+
+
 
 ### 3.2 Función de Schwefel
 
@@ -820,10 +805,10 @@ def Schwefel_ga(ga_instance, solution, solution_idx):
     return fitness
 
 # Configuración de la instancia de GA con los ajustes necesarios
-ga_instance_schwefel = pygad.GA(num_generations=80,
-                                num_parents_mating=2,
+ga_instance_schwefel = pygad.GA(num_generations=60,
+                                num_parents_mating=4,
                                 fitness_func=Schwefel_ga,
-                                sol_per_pop=9,
+                                sol_per_pop=10,
                                 num_genes=30,
                                 init_range_low=-500,
                                 init_range_high=500,
@@ -838,14 +823,16 @@ ga_instance_schwefel = pygad.GA(num_generations=80,
 
 ```
 
-Una vez creada la instancia de nuestro algoritmo, en este caso para Schwefel, ejecutamos la optimización mediante el algoritmo evolutivo y mostramos la evolución del ajuste generación tras generación
 
+
+Tras configurar nuestra instancia del algoritmo genético, orientada específicamente a la optimización de la función de Schwefel, procedemos con la ejecución del proceso evolutivo. Durante esta fase, el algoritmo emprende una búsqueda sistemática a través de las generaciones para optimizar la adaptación de las soluciones. A medida que avanza, capturamos y visualizamos el progreso de la aptitud de las soluciones, generación tras generación, ilustrando así la eficacia del algoritmo en su camino hacia la localización de un óptimo cercano al mínimo global. Este proceso nos permite observar de forma clara cómo el algoritmo genético mejora y refina las soluciones con cada iteración.
 
 ```{python}
 # Ejecutar la instancia de GA
 ga_instance_schwefel.run()
 
 # Obtener y mostrar la mejor solución
+soluciones_schwefel = ga_instance_schwefel.solutions
 solution, solution_fitness, solution_idx = ga_instance_schwefel.best_solution()
 print(f"Best Solution: {solution}")
 print(f"Best Solution Fitness: {solution_fitness}")
@@ -859,7 +846,7 @@ plt.show()
 
 #### - Muestra de gráficos
 
-Generamos un gráfico nuevamente para nuestra función de prueba
+Tras regenerar el gráfico y marcar el valor óptimo encontrado, se observa que este dista del verdadero mínimo global. Esta discrepancia subraya la complejidad inherente a la función de Schwefel, que, debido a su paisaje lleno de mínimos locales, plantea un desafío significativo para el algoritmo. No obstante, ajustando y experimentando con distintos parámetros dentro de la configuración de pygad.GA, es plausible que se mejore la capacidad del algoritmo para acercarse más al mínimo global. Tales ajustes pueden incluir la modificación del tamaño de la población, la tasa de mutación, o la estrategia de selección, entre otros, lo cual podría optimizar la búsqueda y posiblemente conducir a resultados más precisos.
 
 
 ```{python}
@@ -884,7 +871,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(10,7)
 contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
 contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
-line, = ax.plot([], [], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+line, = ax.plot(soluciones_schwefel[0][-1], soluciones_schwefel[0][-2], 'xr--',mec='b',markersize=20) #Creando la línea que contendrá los puntos
               # de la animación de Optimización
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -894,16 +881,33 @@ plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
 plt.show()
 ```
 
-Y animamos los resultados obtenidos después de aplicar el algoritmo evolutivo
+```{python}
+soluciones_schwefel = ga_instance_schwefel.best_solution()
+soluciones_schwefel = soluciones_schwefel[0]
+soluciones_schwefel
+```
+
+Para ilustrar dinámicamente el proceso de optimización llevado a cabo por el algoritmo evolutivo, procedemos a animar los resultados obtenidos. Esta animación captura y visualiza cada paso del algoritmo, desde la inicialización hasta la convergencia, permitiendo observar cómo las soluciones evolucionan a lo largo de las generaciones. Mediante esta técnica, no solo se hace evidente la progresiva mejora en la adaptación de las soluciones sino que también se proporciona una perspectiva intuitiva sobre la eficacia del algoritmo en el manejo de la complejidad de la función objetivo. Ajustando los parámetros del algoritmo y refinando su configuración, esperamos mejorar aún más estos resultados, acercándonos al objetivo de encontrar el mínimo global. La animación sirve como una herramienta valiosa para evaluar el desempeño del algoritmo y para identificar oportunidades de optimización en su configuración.
+
+
 
 
 ```{python}
-
-soluciones_schwefel = (soluciones_schwefel[0],)
-
-# Ahora pasas soluciones_schwefel a tu función de animación
-# Suponiendo que 'fig' y 'line' ya están definidos correctamente en tu código
-ani = animation.FuncAnimation(fig, lambda frame: graficar(soluciones_schwefel), frames=23, interval=300)
-ani
+def graficar(frame):
+    pares = [(soluciones_schwefel[i], soluciones_schwefel[i + 1]) for i in range(0, len(soluciones_schwefel), 2)]
+    x, y = zip(*pares)
+    line.set_data(x, y)
+    return line,
 ```
 
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+
+# Crea la animación usando 'FuncAnimation'
+ani = animation.FuncAnimation(fig, graficar, frames=len(soluciones_schwefel), interval=300, blit=True)
+ani
+
+```
