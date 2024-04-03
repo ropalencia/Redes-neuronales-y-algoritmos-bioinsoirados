@@ -1629,3 +1629,7 @@ gif1 = Image(filename="datos/routesb/gifmapa.gif")
 gif2 = Image(filename="datos/routesh/gifmapa.gif")
 display( gif2,gif1)
 ```
+
+## pruebica comitccccc
+
+
