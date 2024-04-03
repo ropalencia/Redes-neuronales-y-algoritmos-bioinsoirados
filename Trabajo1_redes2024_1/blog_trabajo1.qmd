@@ -44,7 +44,7 @@ El empleo de métodos heurísticos en la optimización presenta una alternativa 
 
 
 
-## **Parte 1: optimización numérica**
+# **Parte 1: optimización numérica**
 
 
 Considere las siguientes funciones de prueba:
@@ -816,8 +816,7 @@ ga_instance_schwefel = pygad.GA(num_generations=60,
                                 keep_parents=1,
                                 crossover_type="single_point",
                                 mutation_type="random",
-                                mutation_percent_genes=10,
-                                save_solutions=True)
+                                mutation_percent_genes=10)
 
 
 
@@ -911,3 +910,4 @@ ani = animation.FuncAnimation(fig, graficar, frames=len(soluciones_schwefel), in
 ani
 
 ```
+
