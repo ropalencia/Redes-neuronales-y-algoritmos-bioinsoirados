@@ -1,4 +1,5 @@
 ---
+
 title: "Optimización heurística"
 author:
   - name: Ronald Gabriel Palencia
@@ -1926,7 +1927,6 @@ gif2 = Image(filename="datos/routesh/gifmapa.gif")
 display( gif2,gif1)
 ```
 
-<<<<<<< Updated upstream
 
 ### Conclusiones
 
@@ -1934,5 +1934,3 @@ display( gif2,gif1)
 
 * La diferencia en el desempeño podría deberse a que el algoritmo genético puede explorar un rango más amplio de soluciones y ajustarse mejor a diferentes configuraciones de parámetros, lo que le permite encontrar soluciones más óptimas en un número menor de iteraciones. En cambio, el algoritmo de hormigas, al depender más de interacciones locales, puede tener dificultades para encontrar soluciones globalmente óptimas en problemas complejos y variados, especialmente si los parámetros no están óptimamente configurados.
 
-=======
->>>>>>> Stashed changes
