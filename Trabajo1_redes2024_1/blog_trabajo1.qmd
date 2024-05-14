@@ -1,12 +1,11 @@
 ---
-
 title: "Optimización heurística"
+lang: es    
 author:
   - name: Ronald Gabriel Palencia
     email: ropalencia@unal.edu.co
   - name: Junior Antonio Muños Henao
     email: jmunozhe@unal.edu.co
-
 format:
   html:
     code-fold: true
@@ -18,6 +17,7 @@ theme:
 toc: true
 appendix-style: default
 ---
+
 # **Optimzación Heurìstica**
 
 ## Introdución
@@ -1711,13 +1711,16 @@ El análisis de los costos totales del recorrido en función del número de horm
 
 ### Soluciones en mapa
 
-
 ```{python}
 folder_path = "datos/routesh/"
 for file_name in os.listdir(folder_path):
     file_path = os.path.join(folder_path, file_name)
     if os.path.isfile(file_path):
         os.remove(file_path)
+```
+
+```{python}
+
 imagesroute2 = []
 
 for i in range(len(bestRoute)):
@@ -1760,12 +1763,17 @@ for i in range(len(bestRoute)):
 
     plt.savefig(name)
 
+
+
+```
+
+
+```{python}
 #se crea el gif con las rutas
-with imageio.get_writer('datos/routesh/gifmapa.gif', mode='I', duration=2000) as writer:
+with imageio.get_writer('datos/routesh/gifmapa.gif', mode='I', duration=500) as writer:
     for ruta in imagesroute2:
         image = imageio.imread(ruta)
         writer.append_data(image)
-
 ```
 
 ## Algoritmos Genéticos version
@@ -1773,6 +1781,39 @@ with imageio.get_writer('datos/routesh/gifmapa.gif', mode='I', duration=2000) as
 En este caso, vamos a utilizar la biblioteca PyGAD para implementar el algoritmo genético. 
 
 PyGAD simplifica la implementación del algoritmo genético para resolver el problema del vendedor viajero al permitir la codificación de posibles rutas como cromosomas, definir una función de aptitud para evaluar la calidad de las soluciones, aplicar operadores genéticos como selección, cruzamiento y mutación para evolucionar la población de soluciones, y finalmente, converger hacia una solución óptima o cercana a ella a lo largo de varias generaciones. Esto facilita la búsqueda de la ruta más corta para que el vendedor visite todas las ciudades y regrese al punto de partida de manera eficiente y efectiva.
+
+
+```{python}
+# Attempting the calculation again for the cumulative probability of default over three years
+
+
+
+# Annual default probabilities
+
+default_probabilities = [0.03, 0.04, 0.06]
+
+
+
+# Calculate survival probabilities for each year
+
+survival_rates = [1 - p for p in default_probabilities]
+
+
+
+# Calculate cumulative survival over three years
+
+cumulative_survival = survival_rates[0] * survival_rates[1] * survival_rates[2]
+
+
+
+# Calculate cumulative default probability
+
+cumulative_default_probability = 1 - cumulative_survival
+
+cumulative_default_probability
+```
+
+
 
 
 ```{python}
@@ -1909,7 +1950,7 @@ for i in range(len(bestsol)):
     plt.savefig(name)
 
 #se crea el gif con las rutas de las soluciones
-with imageio.get_writer('datos/routesb/gifmapa.gif', mode='I', duration=2000) as writer:
+with imageio.get_writer('datos/routesb/gifmapa.gif', mode='I', duration=500) as writer:
     for route in imagesroute1:
         image = imageio.imread(route)
         writer.append_data(image)
@@ -1934,3 +1975,22 @@ display( gif2,gif1)
 
 * La diferencia en el desempeño podría deberse a que el algoritmo genético puede explorar un rango más amplio de soluciones y ajustarse mejor a diferentes configuraciones de parámetros, lo que le permite encontrar soluciones más óptimas en un número menor de iteraciones. En cambio, el algoritmo de hormigas, al depender más de interacciones locales, puede tener dificultades para encontrar soluciones globalmente óptimas en problemas complejos y variados, especialmente si los parámetros no están óptimamente configurados.
 
+
+
+
+## Bibliografia
+
+[1] Optimización con algoritmo genético y Nelder-Mead by Joaquín Amat Rodrigo, available under a Attribution 4.0 International (CC BY 4.0) at https://www.cienciadedatos.net/documentos/48_optimizacion_con_algoritmo_genetico
+
+[2] https://github.com/johnberroa/Ant-Colony-Optimization/blob/master/AntColonyOptimizer.py
+
+[3] Siamak Talatahari, in Metaheuristic Applications in Structures and Infrastructures, 2013,"Optimum Performance-Based Seismic Design of Frames Using Metaheuristic Optimization Algorithms", en linea: https://www.sciencedirect.com/topics/engineering/ant-colony-optimization
+
+[4] Manish Mandloi, Vimal Bhatia, in Handbook of Neural Computation, 2017,"Symbol Detection in Multiple Antenna Wireless Systems via Ant Colony Optimization", en linea: ciencedirect.com/topics/engineering/ant-colony-optimization
+
+
+## Porcentaje de contribución en el equipo:
+
+Solución del primero punto: Ronald Palencia
+Solución del segundo punto: Junior Antonio Muñoz.
+Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Palencia

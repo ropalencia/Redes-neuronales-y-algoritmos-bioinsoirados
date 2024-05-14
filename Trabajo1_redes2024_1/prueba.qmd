@@ -1,0 +1,146 @@
+---
+
+title: "Optimización heurística"
+author:
+  - name: Ronald Gabriel Palencia
+    email: ropalencia@unal.edu.co
+  - name: Junior Antonio Muños Henao
+    email: jmunozhe@unal.edu.co
+
+format:
+  html:
+    code-fold: true
+jupyter: python3
+echo: false
+theme:
+          light: flatly
+          dark: darkly
+toc: true
+appendix-style: default
+---
+
+# **Optimzación Heurìstica**
+
+## Introdución
+
+
+La optimización heurística engloba un conjunto de métodos destinados a encontrar soluciones aproximadas a problemas de optimización que son demasiado complejos para los enfoques analíticos tradicionales, como aquellos basados en el cálculo de gradientes. A diferencia de los métodos determinísticos, que procuran soluciones exactas bajo supuestos matemáticos estrictos sobre las funciones objetivo, los enfoques heurísticos exploran el espacio de soluciones de manera estratégica para encontrar soluciones satisfactorias sin garantizar necesariamente el óptimo global. Estos enfoques resultan particularmente valiosos en situaciones donde la función objetivo es discontinua, no diferenciable, altamente compleja, o cuando el espacio de búsqueda es tan amplio que hace inviable una exploración exhaustiva.
+
+Dentro de los métodos heurísticos más destacados y empleados se hallan los algoritmos evolutivos y las colonias de hormigas, ambos inspirados en fenómenos biológicos.
+
+**Algoritmos Evolutivos**
+
+Los algoritmos evolutivos son inspirados por el proceso de evolución biológica y selección natural, operando mediante un ciclo de selección, cruzamiento, y mutación en una población de soluciones candidatas (Mitchell, 1998). Cada solución es evaluada a través de una función de aptitud, determinando su probabilidad de ser seleccionada para la generación de nuevas soluciones. Este ciclo permite que, con el tiempo, las soluciones más aptas predominen, dirigiendo al algoritmo hacia una solución óptima o satisfactoria.
+
+**Colonias de Hormigas**
+
+Por su parte, las colonias de hormigas simulan el comportamiento colectivo de las hormigas en su búsqueda de alimentos, donde cada hormiga explora el espacio de soluciones siguiendo caminos marcados por feromonas, sustancias químicas que permiten la comunicación entre ellas (Dorigo, Maniezzo, & Colorni, 1996). Las rutas con concentraciones más altas de feromonas atraen a más hormigas, favoreciendo la exploración de soluciones prometedoras a través de un proceso de realimentación positiva.
+
+**Aplicación de Métodos Heurísticos**
+
+La aplicación de métodos heurísticos para la optimización de funciones de prueba implica varios pasos clave, comenzando por la definición precisa de la función de prueba que representa el problema de optimización. La elección del método heurístico adecuado depende de las características del problema, incluyendo la naturaleza de la función objetivo y las peculiaridades del espacio de búsqueda. La configuración de los parámetros del algoritmo, como el tamaño de la población en los algoritmos evolutivos o el número de hormigas en las colonias de hormigas, es fundamental para la efectividad del método. Posteriormente, se ejecuta el algoritmo y se monitorea su progreso, realizando ajustes en los parámetros según sea necesario para optimizar los resultados.
+
+El empleo de métodos heurísticos en la optimización presenta una alternativa robusta y adaptable para abordar problemas complejos, ofreciendo soluciones aproximadas cuando los enfoques convencionales resultan inadecuados o ineficaces. La inspiración en procesos naturales no solo proporciona una perspectiva innovadora para la resolución de problemas de optimización sino que también abre nuevas posibilidades de investigación y aplicación en áreas como ingeniería, economía, y ciencia de datos.
+
+
+
+
+
+# **Parte 1: optimización numérica**
+
+
+Considere las siguientes funciones de prueba:
+
+**Función de Rosenbrock**
+
+La **Función de Rosenbrock** es conocida por su valle en forma de banana que contiene el mínimo global. Se define como:
+
+$$
+f(x_1, x_2) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2
+$$
+
+con $x_i \in [-2.048, 2.048]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 1$ y $x_2 = 1$.
+
+**Función de Rastrigin**
+
+La **Función de Rastrigin** es una función no convexa utilizada como problema de prueba de rendimiento para algoritmos de optimización debido a su gran cantidad de mínimos locales. Se define como:
+
+$$
+f(x_1, x_2) = 20 + \sum_{i=1}^{2}(x_i^2 - 10 \cos(2\pi x_i))
+$$
+
+con $x_i \in [-5.12, 5.12]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función de Schwefel**
+
+La **Función de Schwefel** es conocida por su complejidad y su paisaje de búsqueda desafiante. Se define como:
+
+$$
+f(x_1, x_2) = 418.9829 \times 2 - \sum_{i=1}^{2}x_i \sin(\sqrt{|x_i|})
+$$
+
+con $x_i \in [-500, 500]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 420.9687$ y $x_2 = 420.9687$.
+
+**Función de Griewank**
+
+La **Función de Griewank** a menudo se utiliza para probar la eficacia de algoritmos de optimización en tratar con oscilaciones grandes y numerosos óptimos locales. Se define como:
+
+$$
+f(x_1, x_2) = \frac{1}{4000}\sum_{i=1}^{2}x_i^2 - \prod_{i=1}^{2}\cos(\frac{x_i}{\sqrt{i}}) + 1
+$$
+
+con $x_i \in [-600, 600]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función Goldstein-Price**
+
+La **Función Goldstein-Price** es conocida por tener un valle estrecho que conduce al mínimo global. Se define como:
+
+$$
+\begin{align*}
+f(x_1, x_2) = & [1 + (x_1 + x_2 + 1)^2(19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)]\\
+& \times [30 + (2x_1 - 3x_2)^2(18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)]
+\end{align*}
+$$
+
+con $x_i \in [-2, 2]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = -1$.
+
+**Función de las seis jorobas de camello (Six-Hump Camel Back)**
+
+La **Función de las seis jorobas de camello** es una función de prueba que presenta dos mínimos globales. Se define como:
+
+$$
+f(x_1, x_2) = (4 - 2.1x_1^2 + \frac{x_1^4}{3})x_1^2 + x_1x_2 + (-4 + 4x_2^2)x_2^2
+$$
+
+con \(x_1 \in [-3, 3]\) y \(x_2 \in [-2, 2]\). Alcanza su valor mínimo en \(x_1 = -0.0898\) y \(x_2 = 0.7126\), y también en \(x_1 = 0.0898\) y \(x_2 = 0.7126\).
+
+
+**Teniendo en cuanta las anteriores funciones realizar los siguientes items:**
+
+
+1. Escoja dos funciones de prueba
+
+2. Optimice las funciones en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria
+
+3. Optimice las funciones en dos y tres dimensiones usando: algoritmos evolutivos, optimización de partículas y evolución diferencial
+
+4. Represente con un gif animado o un video el proceso de optimización de descenso por gradiente y el proceso usando el método heurístico.
+
+
+```{python}
+
+#!pip install pygad
+#!pip install numpy
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+from matplotlib import animation, rc
+from IPython.display import HTML;
+import pygad
+rc('animation', html='html5');
+```
+## 1. Funciones de Prueba
+
+**La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:**
+
