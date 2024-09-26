@@ -10,10 +10,10 @@ format:
   html:
     code-fold: true
 jupyter: python3
-echo: false
+#echo: false
 theme:
-          light: flatly
-          dark: darkly
+    light: flatly
+    dark: darkly
 toc: true
 appendix-style: default
 ---
@@ -1991,6 +1991,6 @@ display( gif2,gif1)
 
 ## Porcentaje de contribución en el equipo:
 
-Solución del primero punto: Ronald Palencia
+Solución del primero punto: Ronald Gabriel Palencia
 Solución del segundo punto: Junior Antonio Muñoz.
-Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Palencia
+Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Gabriel Palencia

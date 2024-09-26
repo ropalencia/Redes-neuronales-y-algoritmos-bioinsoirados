@@ -1,13 +1,12 @@
 {
   "cells": [
     {
-      "cell_type": "raw",
-      "id": "a2ecad22",
+      "cell_type": "markdown",
       "metadata": {},
       "source": [
         "---\n",
-        "title: Optimización heurística\n",
-        "lang: es\n",
+        "title: \"Optimización heurística\"\n",
+        "lang: es    \n",
         "author:\n",
         "  - name: Ronald Gabriel Palencia\n",
         "    email: ropalencia@unal.edu.co\n",
@@ -16,20 +15,16 @@
         "format:\n",
         "  html:\n",
         "    code-fold: true\n",
-        "echo: false\n",
+        "jupyter: python3\n",
+        "#echo: false\n",
         "theme:\n",
-        "  light: flatly\n",
-        "  dark: darkly\n",
+        "    light: flatly\n",
+        "    dark: darkly\n",
         "toc: true\n",
         "appendix-style: default\n",
-        "---"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "id": "b23b5888",
-      "metadata": {},
-      "source": [
+        "---\n",
+        "\n",
+        "\n",
         "# **Optimzación Heurìstica**\n",
         "\n",
         "## Introdución\n",
@@ -136,26 +131,12 @@
         "3. Optimice las funciones en dos y tres dimensiones usando: algoritmos evolutivos, optimización de partículas y evolución diferencial\n",
         "\n",
         "4. Represente con un gif animado o un video el proceso de optimización de descenso por gradiente y el proceso usando el método heurístico.\n"
-      ]
+      ],
+      "id": "7900d53c"
     },
     {
       "cell_type": "code",
-      "execution_count": 1,
-      "id": "eae19697",
       "metadata": {},
-      "outputs": [
-        {
-          "ename": "ModuleNotFoundError",
-          "evalue": "No module named 'pygad'",
-          "output_type": "error",
-          "traceback": [
-            "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
-            "\u001b[1;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
-            "Cell \u001b[1;32mIn[1], line 9\u001b[0m\n\u001b[0;32m      7\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mmatplotlib\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m animation, rc\n\u001b[0;32m      8\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mIPython\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mdisplay\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m HTML;\n\u001b[1;32m----> 9\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mpygad\u001b[39;00m\n\u001b[0;32m     10\u001b[0m rc(\u001b[38;5;124m'\u001b[39m\u001b[38;5;124manimation\u001b[39m\u001b[38;5;124m'\u001b[39m, html\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mhtml5\u001b[39m\u001b[38;5;124m'\u001b[39m)\n",
-            "\u001b[1;31mModuleNotFoundError\u001b[0m: No module named 'pygad'"
-          ]
-        }
-      ],
       "source": [
         "#!pip install pygad\n",
         "#!pip install numpy\n",
@@ -167,11 +148,13 @@
         "from IPython.display import HTML;\n",
         "import pygad\n",
         "rc('animation', html='html5');"
-      ]
+      ],
+      "id": "7ae1c1a9",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "2d15e1cf",
       "metadata": {},
       "source": [
         "## 1. Funciones de Prueba\n",
@@ -182,14 +165,12 @@
         "* Función de Rastrigin\n",
         "\n",
         "* Función de Schwefel\n"
-      ]
+      ],
+      "id": "53711d01"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "cc51bd6d",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Se implementa la función de Rastrigin vectorizada para arreglos numpy\n",
         "def Rastrigin(X):\n",
@@ -231,11 +212,13 @@
         "\n",
         "plt.tight_layout()\n",
         "plt.show()"
-      ]
+      ],
+      "id": "7a1b2790",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "b83e9868",
       "metadata": {},
       "source": [
         "**Función de Rastrigin (izquierda):**\n",
@@ -248,14 +231,12 @@
         "\n",
         "\n",
         "**Visualización en 3D**\n"
-      ]
+      ],
+      "id": "e2f27e89"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "a9b7f4f2",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import numpy as np\n",
         "import matplotlib.pyplot as plt\n",
@@ -305,11 +286,13 @@
         "\n",
         "plt.tight_layout()\n",
         "plt.show()"
-      ]
+      ],
+      "id": "6528e468",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "2b65b206",
       "metadata": {},
       "source": [
         "Las gráficas 3D muestran claramente la topología de las funciones de Rastrigin y Schwefel. Rastrigin tiene un paisaje ondulado con numerosos mínimos locales, mientras que Schwefel presenta un paisaje más suave con un mínimo global prominente. Estas visualizaciones resaltan la complejidad inherente a cada función\n",
@@ -320,14 +303,12 @@
         "\n",
         "\n",
         "A continuación, presentamos las implementaciones de las funciones necesarias para calcular el gradiente. Además, introducimos el método de descenso por gradiente, una técnica de optimización que utilizaremos para hallar los mínimos de las funciones objetivo. Este enfoque iterativo nos permitirá afinar progresivamente nuestras estimaciones hacia el punto de óptimo global.\n"
-      ]
+      ],
+      "id": "6e141e5a"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "6b07e9df",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# La siguiente función implementa el cálculo del gradiente usando 'list comprehension'\n",
         "def num_grad(x, fun, h=0.01):\n",
@@ -341,11 +322,13 @@
         "        x = x - eta*num_grad(x, f, h=0.01)\n",
         "        iter += 1\n",
         "    return x"
-      ]
+      ],
+      "id": "bdef8f8d",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "57185e51",
       "metadata": {},
       "source": [
         "### 2.1 Función de Rastrigin\n",
@@ -353,16 +336,14 @@
         "#### Generación del gráfico\n",
         "\n",
         "Se procede a definir las características del gráfico que representará todo.\n"
-      ]
+      ],
+      "id": "7143a0f8"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "71a7da4f",
       "metadata": {
         "md-indent": " "
       },
-      "outputs": [],
       "source": [
         "x0 = np.array([4*np.random.random()-1,4*np.random.random()-1])\n",
         "xs = [x0]\n",
@@ -371,14 +352,14 @@
         "   x_new = optimizador_mult_numdev(Rastrigin, x0)\n",
         "   xs.append(x_new)\n",
         "   x0 = x_new"
-      ]
+      ],
+      "id": "9eb15d5d",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "9ab6d0b3",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Particionamiento del rango de cada variable\n",
         "ncols = 100\n",
@@ -403,22 +384,22 @@
         "plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores\n",
         "          # ¡¡Éste método depende de la creación de un objeto \"contourf\" !!\n",
         "plt.show()"
-      ]
+      ],
+      "id": "d742b534",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "2f3e1a84",
       "metadata": {},
       "source": [
         "En el gráfico anterior, se destaca el punto que representa el mínimo encontrado a través del método de descenso por gradiente. A continuación, presentaremos un GIF animado que muestra el conjunto de soluciones halladas en cada iteración del proceso hasta alcanzar la solución óptima. Esta visualización animada brinda una perspectiva clara y dinámica de cómo el algoritmo de descenso por gradiente avanza iterativamente a través del espacio de soluciones, acercándose paso a paso al punto de mínimo global de la función de Rastrigin. Este enfoque no solo facilita la comprensión del proceso de optimización, sino que también ilustra de manera efectiva la eficacia del algoritmo en la búsqueda de soluciones óptimas.\n"
-      ]
+      ],
+      "id": "d154cc93"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "59dec7d3",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Definición de la función graficadora\n",
         "def graficar(frame):\n",
@@ -430,11 +411,13 @@
         "# Animación final\n",
         "ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)\n",
         "ani"
-      ]
+      ],
+      "id": "39c839f6",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "5effd5be",
       "metadata": {},
       "source": [
         "### Optimización en 3D\n",
@@ -442,14 +425,12 @@
         "\n",
         "\n",
         "La siguiente gráfica ilustra el punto mínimo de la función de Rastrigin en tres dimensiones. Es notable que este mínimo está destacado en color rojo.\n"
-      ]
+      ],
+      "id": "c839364a"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "9dc6eba3",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import numpy as np\n",
         "import matplotlib.pyplot as plt\n",
@@ -493,14 +474,14 @@
         "ax.legend()\n",
         "\n",
         "plt.show()"
-      ]
+      ],
+      "id": "755fcd6a",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "679263e2",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "def optimizador_mult_numdev(f, x0, eta=0.01, tol=1e-6, max_iter=1e3):\n",
@@ -548,11 +529,13 @@
         "ani = FuncAnimation(fig, animate, init_func=init, frames=len(history), interval=100, blit=False)\n",
         "ani\n",
         "\"\"\""
-      ]
+      ],
+      "id": "885f9623",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "65ce2cdf",
       "metadata": {},
       "source": [
         "El comportamiento del optimizador de descenso por gradiente, partiendo de un punto inicial $(-3, 3)$ y moviéndose hacia aproximadamente $(-2.96, 2.96)$ con un valor de función de 41, evidencia las limitaciones al enfrentar la compleja función de Rastrigin. Esta mejora, sin alcanzar el mínimo global, subraya las dificultades debido a la naturaleza multimodal de Rastrigin, caracterizada por abundantes mínimos locales. El resultado demuestra la capacidad del optimizador para progresar en un espacio desafiante, utilizando información local del gradiente en su búsqueda de optimización.\n",
@@ -563,14 +546,12 @@
         "[texto del vínculo](https://)Con las funciones de derivadas parciales y \n",
         "\n",
         "de optimización ya implementadas, sólo resta recalcular los datos para la función de Schwefel y generar el gráfico.\n"
-      ]
+      ],
+      "id": "e1c8c578"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "67b9aae0",
       "metadata": {},
-      "outputs": [],
       "source": [
         "def optimizador_mult_numdev(f, x0, eta=0.0001, tol=1e-6, max_iter=1e4):\n",
         "    x = np.array(x0)\n",
@@ -590,14 +571,14 @@
         "    x0 = x_new\n",
         "\n",
         "print(xs)"
-      ]
+      ],
+      "id": "ec0ff954",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "2c9e602b",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Particionamiento del rango de cada variable\n",
         "ncols = 1000\n",
@@ -622,22 +603,22 @@
         "plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores\n",
         "          # ¡¡Éste método depende de la creación de un objeto \"contourf\" !!\n",
         "plt.show()"
-      ]
+      ],
+      "id": "fc55a183",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "332217f1",
       "metadata": {},
       "source": [
         "Durante la ejecución del optimizador de descenso por gradiente aplicado a la función de Schwefel, el punto de inicio aleatorio seleccionado fue $(-75.28, 270.43)$. El optimizador convergió hacia el punto $(-65.56, 302.46)$, que está significativamente alejado del mínimo global conocido de la función. Esta dificultad para alcanzar el mínimo global puede atribuirse a la presencia de numerosos mínimos locales en la función de Schwefel, un desafío común para los métodos de optimización basados en el gradiente. Además, se realizó una exploración variando el valor de $\\eta$, observándose que la reducción de este parámetro resultaba en una ejecución más lenta del algoritmo. En una sección posterior, se ilustrará este proceso de optimización mediante un GIF, que ofrecerá una visualización de la trayectoria seguida por el optimizador en su búsqueda de los valores mínimos encontrados.\n"
-      ]
+      ],
+      "id": "14222dfd"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "d8188bab",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Implementación del método de descenso por gradiente\n",
         "x0 = np.array([300*(2*np.random.random()-1),300*(2*np.random.random()-1)]) # generación de un punto aleatorio\n",
@@ -656,34 +637,34 @@
         "# Animación final\n",
         "ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)\n",
         "ani"
-      ]
+      ],
+      "id": "8cb7b310",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "6ad1ac0d",
       "metadata": {},
       "source": [
         "### Optimización en 3D\n",
         "\n",
         "La optimización en tres dimensiones de la función de Schwefel no consigue ubicar el mínimo global, sin embargo, evidencia un avance significativo hacia este. La gráfica subsiguiente ilustra la secuencia de puntos descubiertos durante el proceso de optimización, lo cual demuestra el progresivo acercamiento hacia la región de mínimo valor en la función objetivo.\n"
-      ]
+      ],
+      "id": "160d3cfa"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "7f835a56",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#!pip install plotly"
-      ]
+      ],
+      "id": "761862f5",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "5f1a9cea",
       "metadata": {},
-      "outputs": [],
       "source": [
         "np.random.seed(42)\n",
         "x0 = np.array([300*(2*np.random.random()-1) for _ in range(3)])  # Punto inicial en 3D\n",
@@ -696,14 +677,14 @@
         "    x0 = x_new\n",
         "\n",
         "xs = np.array(xs)  # Convertir a un array de Numpy para facilitar la manipulación"
-      ]
+      ],
+      "id": "8f52f998",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "e0befaf7",
       "metadata": {},
-      "outputs": [],
       "source": [
         "fig = plt.figure(figsize=(10, 8))\n",
         "ax = fig.add_subplot(111, projection='3d')\n",
@@ -718,22 +699,22 @@
         "ax.legend()\n",
         "\n",
         "plt.show()"
-      ]
+      ],
+      "id": "27d1bb78",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "a42eb930",
       "metadata": {},
       "source": [
         "Mediante la visualización interactiva en tres dimensiones, se confirma que, al igual que en el caso bidimensional, el optimizador no alcanza el mínimo global de la función de Schwefel. Este resultado es consecuencia de la abundancia de mínimos locales que caracterizan a esta función. No obstante, es interesante observar que, pese a la selección aleatoria del punto inicial, el optimizador no queda atrapado en ninguno de estos mínimos locales, lo cual sugiere una dinámica de búsqueda que consigue evitar estancamientos prematuros en la exploración del espacio de soluciones.\n"
-      ]
+      ],
+      "id": "beecc0fc"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "1de3b11c",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import plotly.graph_objs as go\n",
         "import numpy as np\n",
@@ -766,22 +747,22 @@
         "\n",
         "# Mostrar la figura\n",
         "fig.show()"
-      ]
+      ],
+      "id": "ab0a6426",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "8e3037ee",
       "metadata": {},
       "source": [
         "## 3. Optimización mediante algoritmos evolutivos\n"
-      ]
+      ],
+      "id": "b260d49c"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "1cb0054b",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "# Se implementa la función de Rastrigin vectorizada para arreglos numpy\n",
@@ -796,11 +777,13 @@
         "    fitness = -Y\n",
         "    return(fitness)\n",
         "    \"\"\""
-      ]
+      ],
+      "id": "619e8212",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "f53360e7",
       "metadata": {},
       "source": [
         "### 3.1 Función de Rastrigin\n",
@@ -822,21 +805,21 @@
         "* La mutación de los individuos seguirá una estrategia aleatoria.\n",
         "\n",
         "* Esta configuración establece los parámetros operativos fundamentales del algoritmo genético y se orienta a la optimización efectiva de la compleja función de Rastrigin.\n"
-      ]
+      ],
+      "id": "5cabbf03"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "5a69d618",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#!pip install pygad==3.3.0"
-      ]
+      ],
+      "id": "f2f28596",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "5abd17d6",
       "metadata": {},
       "source": [
         "Una vez creada la instancia de nuestro algoritmo, ejecutamos la optimización mediante el algoritmo evolutivo y mostramos la evolución del ajuste generación tras generación\n",
@@ -848,14 +831,12 @@
         "                                 num_genes=3,\n",
         "                                 init_range_low=-5.12,\n",
         "                                 init_range_high=5.12)\n"
-      ]
+      ],
+      "id": "e182e74d"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "15d5bb42",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import pygad\n",
         "\n",
@@ -892,11 +873,13 @@
         "plt.xlabel('Generation')\n",
         "plt.ylabel('Fitness')\n",
         "plt.show()"
-      ]
+      ],
+      "id": "27571b8f",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "797fccf6",
       "metadata": {},
       "source": [
         "En la gráfica anterior, se puede observar la trayectoria de optimización del algoritmo genético PyGAD en función del número de generaciones. Se aprecia una marcada mejora en la aptitud durante las etapas iniciales, con un rápido incremento hacia valores más óptimos. Este progreso temprano sugiere que el algoritmo es eficiente en la identificación de soluciones prometedoras desde el principio. Tras esta fase de mejoras significativas, la curva se nivela, lo cual indica que el algoritmo ha llegado a un punto de convergencia y se están haciendo menos descubrimientos de nuevas soluciones óptimas a medida que avanza el número de generaciones. La estabilidad de la aptitud hacia el final de las iteraciones sugiere que se ha alcanzado un punto cercano al óptimo, donde las subsiguientes evoluciones ofrecen ganancias marginales en el desempeño o aptitud del modelo.\n",
@@ -905,14 +888,12 @@
         "\n",
         "\n",
         "La gráfica siguiente exhibe el punto óptimo encontrado por el algoritmo genético, marcado con una 'X', situado en una zona de bajo valor, que indica un rendimiento superior en la tarea de optimización en comparación con el método de descenso por gradiente. Este resultado resalta la habilidad del algoritmo genético para evitar los mínimos locales y dirigirse hacia una solución más cercana al mínimo global, lo que demuestra su eficacia en la exploración del espacio de soluciones y su ventaja sobre métodos basados en el gradiente en escenarios de optimización complejos.\n"
-      ]
+      ],
+      "id": "760fe1bc"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "b858d73e",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import pygad\n",
         "import numpy as np\n",
@@ -936,14 +917,14 @@
         "\n",
         "# Collect the best solution after the final generation\n",
         "best_solution = ga_instance.best_solution()[0]"
-      ]
+      ],
+      "id": "d0e3d033",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "4e8c6e87",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import matplotlib.pyplot as plt\n",
         "\n",
@@ -969,25 +950,25 @@
         "ax.legend()\n",
         "\n",
         "plt.show()"
-      ]
+      ],
+      "id": "94fb02a3",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "fbcb907f",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"La animación de la optimización llevada a cabo por el algoritmo genético proporciona una perspectiva detallada del proceso evolutivo y su trayectoria hacia la obtención de una solución altamente eficiente. A lo largo de la secuencia animada, se puede apreciar cómo el algoritmo progresa, generación tras generación, acercándose a una ubicación que converge hacia el mínimo global. Es notable cómo la mayoría de los valores identificados en cada generación se acumulan en las inmediaciones del óptimo, lo que evidencia la capacidad del algoritmo genético para centrar su búsqueda en la zona más prometedora del espacio de soluciones.\n",
         "\"\"\""
-      ]
+      ],
+      "id": "bdfc59d3",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "2d55f1c7",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"# Definición de la función graficadora\n",
         "def graficar(frame):\n",
@@ -999,14 +980,14 @@
         "ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)\n",
         "ani\n",
         "\"\"\""
-      ]
+      ],
+      "id": "b9edeac4",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "fcb86803",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "import pygad\n",
@@ -1029,28 +1010,28 @@
         "                       mutation_percent_genes=10)\n",
         "                       \n",
         "\"\"\""
-      ]
+      ],
+      "id": "37740373",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "8d37ec97",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "soluciones_rastrigin = ga_instance_rastrigin.solutions\n",
         "ga_instance_rastrigin.plot_fitness()\n",
         "plt.show()\n",
         "\"\"\""
-      ]
+      ],
+      "id": "fa095c84",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "532cfb61",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "# Se implementa la función de Rastrigin vectorizada para arreglos numpy\n",
@@ -1084,11 +1065,13 @@
         "plt.show()\n",
         "\n",
         "\"\"\""
-      ]
+      ],
+      "id": "e3d1044c",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "a51bb448",
       "metadata": {},
       "source": [
         "### 3.2 Función de Schwefel\n",
@@ -1106,24 +1089,22 @@
         "* Se tomarán 9 individuos en cada generación\n",
         "* El criterio de selección de reproducción : mejores individuos\n",
         "* Tipo de mutación: Aleatoria\n"
-      ]
+      ],
+      "id": "0c49d58f"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "9f7b1b49",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#!pip install --upgrade pygad"
-      ]
+      ],
+      "id": "217f8f36",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "49be300d",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import pygad\n",
         "\n",
@@ -1159,22 +1140,22 @@
         "plt.xlabel('Generation')\n",
         "plt.ylabel('Fitness')\n",
         "plt.show()"
-      ]
+      ],
+      "id": "fd418c05",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "6f411f09",
       "metadata": {},
       "source": [
         "Tras configurar nuestra instancia del algoritmo genético, orientada específicamente a la optimización de la función de Schwefel, procedemos con la ejecución del proceso evolutivo. Durante esta fase, el algoritmo emprende una búsqueda sistemática a través de las generaciones para optimizar la adaptación de las soluciones. A medida que avanza, capturamos y visualizamos el progreso de la aptitud de las soluciones, generación tras generación, ilustrando así la eficacia del algoritmo en su camino hacia la localización de un óptimo cercano al mínimo global. Este proceso nos permite observar de forma clara cómo el algoritmo genético mejora y refina las soluciones con cada iteración.\n"
-      ]
+      ],
+      "id": "6e30732d"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "62e97f7d",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "import numpy as np\n",
@@ -1202,14 +1183,14 @@
         "                       save_solutions=True)\n",
         "\n",
         "\"\"\""
-      ]
+      ],
+      "id": "e09ec367",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "55aa0d7e",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "ga_instance_schwefel.run()\n",
@@ -1218,14 +1199,14 @@
         "ga_instance_schwefel.plot_fitness()\n",
         "plt.show()\n",
         "\"\"\""
-      ]
+      ],
+      "id": "2f831fe2",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "2bb8f244",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "# Ejecutar la instancia de GA\n",
@@ -1243,24 +1224,24 @@
         "# Mostrar el gráfico (en caso de estar usando Jupyter Notebook o un entorno que lo permita)\n",
         "plt.show()\n",
         "\"\"\""
-      ]
+      ],
+      "id": "cc01ebc6",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "929cdccf",
       "metadata": {},
       "source": [
         "#### - Muestra de gráficos\n",
         "\n",
         "Tras regenerar el gráfico y marcar el valor óptimo encontrado, se observa que este dista del verdadero mínimo global. Esta discrepancia subraya la complejidad inherente a la función de Schwefel, que, debido a su paisaje lleno de mínimos locales, plantea un desafío significativo para el algoritmo. No obstante, ajustando y experimentando con distintos parámetros dentro de la configuración de pygad.GA, es plausible que se mejore la capacidad del algoritmo para acercarse más al mínimo global. Tales ajustes pueden incluir la modificación del tamaño de la población, la tasa de mutación, o la estrategia de selección, entre otros, lo cual podría optimizar la búsqueda y posiblemente conducir a resultados más precisos.\n"
-      ]
+      ],
+      "id": "6948c089"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "06bb4f96",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import pygad\n",
         "import numpy as np\n",
@@ -1282,14 +1263,14 @@
         "\n",
         "# Collect the best solution after the final generation\n",
         "best_solution = ga_instance.best_solution()[0]"
-      ]
+      ],
+      "id": "1e05ba01",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "60ff0ab5",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import matplotlib.pyplot as plt\n",
         "\n",
@@ -1315,14 +1296,14 @@
         "ax.legend()\n",
         "\n",
         "plt.show()"
-      ]
+      ],
+      "id": "55047f95",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "c940c8ec",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "soluciones_schwefel = ga_instance_schwefel.best_solution()\n",
@@ -1356,28 +1337,28 @@
         "plt.show()\n",
         "\n",
         "\"\"\""
-      ]
+      ],
+      "id": "cfdfb3e8",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "028e0e1c",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "soluciones_schwefel = ga_instance_schwefel.best_solution()\n",
         "soluciones_schwefel = soluciones_schwefel[0]\n",
         "soluciones_schwefel\n",
         "\"\"\""
-      ]
+      ],
+      "id": "8eceb662",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "58b18a2a",
       "metadata": {},
-      "outputs": [],
       "source": [
         "\"\"\"\n",
         "\n",
@@ -1400,25 +1381,25 @@
         "ani = animation.FuncAnimation(fig, graficar, frames=len(soluciones_schwefel), interval=300, blit=True)\n",
         "ani\n",
         "\"\"\""
-      ]
+      ],
+      "id": "c006b00e",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "5065684d",
       "metadata": {},
       "source": [
         "# Punto 2. Problema del vendedor viajero\n",
         "\n",
         "El problema del vendedor viajero es un desafío clásico en la optimización, buscando la ruta más corta para visitar todas las ciudades en una lista y regresar al punto de partida. Para abordar este problema, se pueden utilizar diferentes algoritmos. \n",
         "El algoritmo de las hormigas simula el comportamiento de las hormigas para encontrar rutas óptimas, mientras que el algoritmo genético se basa en principios evolutivos para buscar soluciones eficientes mediante la generación y evolución de poblaciones de soluciones posibles. Ambos enfoques ofrecen estrategias interesantes para resolver este desafío de optimización de rutas.\n"
-      ]
+      ],
+      "id": "45f0f05c"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "d4fa2f86",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#%%capture\n",
         "#importacion de librerias necesarias\n",
@@ -1434,14 +1415,14 @@
         "#!pip install pandas\n",
         "#!pip install imageio\n",
         "#!pip install pandas openpyxl"
-      ]
+      ],
+      "id": "c29046ae",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "6ffa07f6",
       "metadata": {},
-      "outputs": [],
       "source": [
         "import numpy as np\n",
         "import pyproj\n",
@@ -1457,11 +1438,13 @@
         "import imageio\n",
         "\n",
         "#from pygad import gann"
-      ]
+      ],
+      "id": "f79c5295",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "c389e3d4",
       "metadata": {},
       "source": [
         "## Algoritmo Hormigas\n",
@@ -1470,14 +1453,12 @@
         "El algoritmo de las hormigas es un método de optimización inspirado en el comportamiento de las hormigas cuando buscan comida. En este algoritmo, se simula el proceso natural mediante el cual las hormigas exploran aleatoriamente su entorno en busca de comida. Cuando una hormiga encuentra alimento, regresa al nido dejando un rastro de feromonas en su camino. Estas feromonas atraen a otras hormigas hacia la fuente de comida. A medida que más hormigas siguen el rastro de feromonas, el camino con una mayor concentración de feromonas se convierte en la ruta preferida. Este enfoque de marcado y seguimiento de caminos con feromonas se utiliza en el algoritmo de las hormigas para encontrar la ruta más corta en un grafo, donde los caminos más cortos acumulan feromonas y se vuelven más atractivos para la exploración de otras hormigas virtuales, generando así soluciones cercanas a la óptima en problemas de optimización de rutas.\n",
         "\n",
         "https://github.com/johnberroa/Ant-Colony-Optimization/blob/master/AntColonyOptimizer.py\n"
-      ]
+      ],
+      "id": "4e6f58c7"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "7d939f20",
       "metadata": {},
-      "outputs": [],
       "source": [
         "%%capture\n",
         "import numpy as np\n",
@@ -1765,14 +1746,14 @@
         "            plt.title(\"Ant Colony Optimization Results (best: {})\".format(\n",
         "                np.round(self.best, 2)))\n",
         "            plt.show()"
-      ]
+      ],
+      "id": "94e6246f",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "9d1b8737",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#coordenades 'x' y 'y' de las ciudades\n",
         "cities = [\"Palmira\", \"Pasto\", \"Tuluá\", \"Bogota\", \"Pereira\", \"Armenia\", \"Manizales\", \"Valledupar\",\n",
@@ -1787,24 +1768,24 @@
         "\n",
         "X = [coordns[i][1] for i in range(len(coordns))]\n",
         "Y = [coordns[i][0] for i in range(len(coordns))]"
-      ]
+      ],
+      "id": "a051ac31",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "d0d0964d",
       "metadata": {},
       "source": [
         "### Adecuación de coordenadas\n",
         "\n",
         "Se adecuan coordenadas para coincidir con la proyección y se crea dataframe que se usara para hacer cálculos y conseguir matrices de solución\n"
-      ]
+      ],
+      "id": "c1a689b7"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "041bd667",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#sistema de proyección de origen WGS84 (latitud y longitud)\n",
         "source = 'EPSG:4326'\n",
@@ -1833,22 +1814,22 @@
         "#se agrega la columna el GeoDataFrame\n",
         "gdf['point_float'] = gdf['geometry'].apply(lambda punto: transf(punto))\n",
         "gdf"
-      ]
+      ],
+      "id": "488f8bd8",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "eeda2c93",
       "metadata": {},
       "source": [
         "### Carga de mapa\n"
-      ]
+      ],
+      "id": "b6fae1fe"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "74771bc3",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se carga el .shp de Colombia\n",
         "mapacol = gpd.read_file('datos/colombia.shp')\n",
@@ -1859,11 +1840,13 @@
         "gdf.plot(ax=ax, markersize=8, color='cyan')\n",
         "for i, txt in enumerate(gdf['cities']):\n",
         "    ax.annotate(txt, (gdf['geometry'][i].x,gdf['geometry'][i].y), fontsize=8, color='black')"
-      ]
+      ],
+      "id": "3dc983bc",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "f2653b31",
       "metadata": {},
       "source": [
         "## Algoritmo Hormigas version\n",
@@ -1880,14 +1863,12 @@
         "\n",
         "De los datos proporcionados por el ministerio de trabajo se toma el dato de una hora de trabajo\n",
         "*   Sueldo básico del conductor: 5.532 por hora\n"
-      ]
+      ],
+      "id": "8a54e185"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "aa382063",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se crea funcion para facilitar el calculo de distancias\n",
         "from math import sin,cos,atan2,sqrt,radians\n",
@@ -1908,14 +1889,14 @@
         "    #finalmente la distancia entre los puntos\n",
         "    dista = R * c\n",
         "    return dista"
-      ]
+      ],
+      "id": "8082e447",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "a4619b28",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se crea una matriz para almacenar las distancias\n",
         "distances = [[0.0] * len(coordns) for i in range(len(coordns))]\n",
@@ -1930,22 +1911,22 @@
         "        distances[j][i] = round(dist,2)\n",
         "\n",
         "matdist = np.array(distances).reshape(15,15)"
-      ]
+      ],
+      "id": "745ef3e1",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "3a9bb3e4",
       "metadata": {},
       "source": [
         "### Matriz de costos\n"
-      ]
+      ],
+      "id": "3dd1692a"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "43815ada",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se importan matrices en excel de cantidad de peajes y distancia entre lugares con formato 15x15\n",
         "#se convierten a conveniencia en dataframes\n",
@@ -1953,11 +1934,13 @@
         "matpeaj = peajes.to_numpy()\n",
         "times = pd.read_excel('datos/matriztiempos.xlsx', header=None) #en Total de Minutos\n",
         "mattime = times.to_numpy()"
-      ]
+      ],
+      "id": "6f75d33b",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "3ce74d54",
       "metadata": {},
       "source": [
         "Estas matrices tienen un formato de 15x15, lo que significa que contienen información para 15 ciudades diferentes.\n",
@@ -1982,14 +1965,12 @@
         "En este ejemplo, cada fila y cada columna representan una ciudad. Los valores en la matriz representan el costo total de viajar de una ciudad a otra. Por ejemplo, el costo de viajar de la Ciudad A a la Ciudad B es de 1000 unidades de costo.\n",
         "\n",
         "Este costo se calcula como la suma del costo por peaje, el costo del tiempo del conductor, y el costo del combustible. Por ejemplo, si el costo por peaje es de 500 unidades, el costo del tiempo del conductor es de 300 unidades, y el costo del combustible es de 200 unidades, entonces el costo total de viaje sería de 1000 unidades.\n"
-      ]
+      ],
+      "id": "0e0800ae"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "d9d29775",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#calculos y conversiones necesarias\n",
         "cp = 10000 #costo promedio por peaje\n",
@@ -2001,14 +1982,14 @@
         "\n",
         "#se calcula matriz de costos\n",
         "matcost = cp*mattime + matpeaj*8000 + cg*matdist"
-      ]
+      ],
+      "id": "7986bb1c",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "eb029a9a",
       "metadata": {},
-      "outputs": [],
       "source": [
         "hormigas=[5,20,45,70,100] #cantidad de hormigas a evaluar\n",
         "bestRoute=[]\n",
@@ -2018,22 +1999,22 @@
         "    best = optimizer.fit(matcost, 100) #se inicializa con 100 iteraciones\n",
         "    optimizer.plot()\n",
         "    bestRoute.append(optimizer.best_path) #se guarda la mejor ruta para cada cantidad"
-      ]
+      ],
+      "id": "809cc72b",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "9886b9be",
       "metadata": {},
       "source": [
         "### Se calculan los costos totales por cada recorrido\n"
-      ]
+      ],
+      "id": "579a0355"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "e9abe4d1",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#para calcular el costo total en cada recorrido\n",
         "def costos(ruta, costos):\n",
@@ -2044,39 +2025,39 @@
         "\n",
         "for i in range(len(bestRoute)):\n",
         "    print(\"El costo total del recorrido: $\", round(costos(bestRoute[i], matcost), 2), \"pesos para un total de\", hormigas[i], \"Hormigas\")"
-      ]
+      ],
+      "id": "0eedf507",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "71e237e0",
       "metadata": {},
       "source": [
         "El análisis de los costos totales del recorrido en función del número de hormigas en el algoritmo de las hormigas muestra que agregar más hormigas inicialmente no garantiza una mejora en la eficiencia. Sin embargo, alrededor de las 45 hormigas, se encuentra un punto óptimo donde el costo total es más bajo ($2,262,868.95). A partir de ese punto, seguir aumentando el número de hormigas no reduce significativamente los costos. Este resultado resalta la importancia de encontrar un equilibrio entre el número de hormigas y la eficiencia del algoritmo.\n",
         "\n",
         "\n",
         "### Soluciones en mapa\n"
-      ]
+      ],
+      "id": "cf58c186"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "3a1f627d",
       "metadata": {},
-      "outputs": [],
       "source": [
         "folder_path = \"datos/routesh/\"\n",
         "for file_name in os.listdir(folder_path):\n",
         "    file_path = os.path.join(folder_path, file_name)\n",
         "    if os.path.isfile(file_path):\n",
         "        os.remove(file_path)"
-      ]
+      ],
+      "id": "10736535",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "d2d1298a",
       "metadata": {},
-      "outputs": [],
       "source": [
         "imagesroute2 = []\n",
         "\n",
@@ -2119,25 +2100,27 @@
         "    imagesroute2.append(name)\n",
         "\n",
         "    plt.savefig(name)\n"
-      ]
+      ],
+      "id": "3e518b65",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "02f035ec",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se crea el gif con las rutas\n",
         "with imageio.get_writer('datos/routesh/gifmapa.gif', mode='I', duration=500) as writer:\n",
         "    for ruta in imagesroute2:\n",
         "        image = imageio.imread(ruta)\n",
         "        writer.append_data(image)"
-      ]
+      ],
+      "id": "7a4e14f3",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "0cfa2211",
       "metadata": {},
       "source": [
         "## Algoritmos Genéticos version\n",
@@ -2145,14 +2128,12 @@
         "En este caso, vamos a utilizar la biblioteca PyGAD para implementar el algoritmo genético. \n",
         "\n",
         "PyGAD simplifica la implementación del algoritmo genético para resolver el problema del vendedor viajero al permitir la codificación de posibles rutas como cromosomas, definir una función de aptitud para evaluar la calidad de las soluciones, aplicar operadores genéticos como selección, cruzamiento y mutación para evolucionar la población de soluciones, y finalmente, converger hacia una solución óptima o cercana a ella a lo largo de varias generaciones. Esto facilita la búsqueda de la ruta más corta para que el vendedor visite todas las ciudades y regrese al punto de partida de manera eficiente y efectiva.\n"
-      ]
+      ],
+      "id": "122a5428"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "bd207ae0",
       "metadata": {},
-      "outputs": [],
       "source": [
         "# Attempting the calculation again for the cumulative probability of default over three years\n",
         "\n",
@@ -2181,14 +2162,14 @@
         "cumulative_default_probability = 1 - cumulative_survival\n",
         "\n",
         "cumulative_default_probability"
-      ]
+      ],
+      "id": "a79982c2",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "dde3e1b4",
       "metadata": {},
-      "outputs": [],
       "source": [
         "images = []\n",
         "\n",
@@ -2247,22 +2228,22 @@
         "    #se imprime la mejor solucion encontrada\n",
         "    print(\"Mejor solución encontrada en:\",\n",
         "          num_generations, \"iteraciones es:\", bestCity)"
-      ]
+      ],
+      "id": "d6399ec8",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "7340a0ac",
       "metadata": {},
       "source": [
         "### Se calcula costos de los recorridos\n"
-      ]
+      ],
+      "id": "6de563cf"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "60433960",
       "metadata": {},
-      "outputs": [],
       "source": [
         "#se define funcion para calcular el costo total de la solucion\n",
         "def total(route, costs):\n",
@@ -2273,24 +2254,24 @@
         "#se imprime el costo total de cada solucion\n",
         "for i in range(len(bestsol)):\n",
         "    print(\"El costo total del recorrido es: \",round(total(bestsol[i],matcost),2),\" pesos para un total de \", generations[i], \"iteraciones\")"
-      ]
+      ],
+      "id": "d410d2f0",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "fac33174",
       "metadata": {},
       "source": [
         "El análisis de los costos totales del recorrido en función del número de iteraciones revela un patrón interesante: inicialmente, pocos intentos resultan eficientes en costos. Sin embargo, aumentar las iteraciones no siempre mejora la eficiencia y puede llevar a costos más altos. Curiosamente, al extender significativamente las iteraciones, se observa una tendencia a la reducción del costo, indicando un punto óptimo de eficiencia. Este fenómeno subraya la importancia de encontrar un equilibrio adecuado entre el número de iteraciones y el costo total, destacando que más iteraciones pueden, hasta cierto punto, optimizar los costos.\n",
         "\n",
         "### Soluciones en mapa  \n"
-      ]
+      ],
+      "id": "0fddd55e"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "3250fc1f",
       "metadata": {},
-      "outputs": [],
       "source": [
         "folder_path = \"datos/routesb/\"\n",
         "for file_name in os.listdir(folder_path):\n",
@@ -2347,33 +2328,35 @@
         "    for route in imagesroute1:\n",
         "        image = imageio.imread(route)\n",
         "        writer.append_data(image)"
-      ]
+      ],
+      "id": "5c172477",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "5c58d5c0",
       "metadata": {},
       "source": [
         "### Gif con mejores soluciones\n"
-      ]
+      ],
+      "id": "d95dc0e8"
     },
     {
       "cell_type": "code",
-      "execution_count": null,
-      "id": "13294b56",
       "metadata": {},
-      "outputs": [],
       "source": [
         "from IPython.display import Image, display\n",
         "\n",
         "gif1 = Image(filename=\"datos/routesb/gifmapa.gif\")\n",
         "gif2 = Image(filename=\"datos/routesh/gifmapa.gif\")\n",
         "display( gif2,gif1)"
-      ]
+      ],
+      "id": "0b77651c",
+      "execution_count": null,
+      "outputs": []
     },
     {
       "cell_type": "markdown",
-      "id": "39657376",
       "metadata": {},
       "source": [
         "### Conclusiones\n",
@@ -2398,29 +2381,19 @@
         "\n",
         "## Porcentaje de contribución en el equipo:\n",
         "\n",
-        "Solución del primero punto: Ronald Palencia\n",
+        "Solución del primero punto: Ronald Gabriel Palencia\n",
         "Solución del segundo punto: Junior Antonio Muñoz.\n",
-        "Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Palencia"
-      ]
+        "Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Gabriel Palencia"
+      ],
+      "id": "ba0250b0"
     }
   ],
   "metadata": {
     "kernelspec": {
-      "display_name": "Python 3 (ipykernel)",
+      "name": "python3",
       "language": "python",
-      "name": "python3"
-    },
-    "language_info": {
-      "codemirror_mode": {
-        "name": "ipython",
-        "version": 3
-      },
-      "file_extension": ".py",
-      "mimetype": "text/x-python",
-      "name": "python",
-      "nbconvert_exporter": "python",
-      "pygments_lexer": "ipython3",
-      "version": "3.12.4"
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\DELL\\anaconda3\\share\\jupyter\\kernels\\python3"
     }
   },
   "nbformat": 4,

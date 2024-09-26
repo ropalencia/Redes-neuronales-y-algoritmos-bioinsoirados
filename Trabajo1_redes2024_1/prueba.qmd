@@ -129,17 +129,18 @@ con \(x_1 \in [-3, 3]\) y \(x_2 \in [-2, 2]\). Alcanza su valor mínimo en \(x_1
 
 ```{python}
 
-#!pip install pygad
-#!pip install numpy
+!pip install pygad
+!pip install numpy
 
 import numpy as np
-
 import matplotlib.pyplot as plt
 from matplotlib import animation, rc
 from IPython.display import HTML;
 import pygad
 rc('animation', html='html5');
 ```
+
+
 ## 1. Funciones de Prueba
 
 **La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:**
