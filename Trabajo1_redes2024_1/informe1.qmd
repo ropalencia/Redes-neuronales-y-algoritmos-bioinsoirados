@@ -1,0 +1,1796 @@
+---
+title: "Optimización heurística"
+lang: es    
+author:
+  - name: Ronald Gabriel Palencia
+    email: ropalencia@unal.edu.co
+  - name: Junior Antonio Muñoz Henao
+    email: jmunozhe@unal.edu.co
+format:
+  html:
+    code-fold: true
+jupyter: python3
+#echo: false
+theme:
+    light: flatly
+    dark: darkly
+toc: true
+appendix-style: default
+---
+
+# **Optimzación Heurística**
+
+## Introdución
+
+
+La optimización heurística engloba un conjunto de métodos destinados a encontrar soluciones aproximadas a problemas de optimización que son demasiado complejos para los enfoques analíticos tradicionales, como aquellos basados en el cálculo de gradientes. A diferencia de los métodos determinísticos, que procuran soluciones exactas bajo supuestos matemáticos estrictos sobre las funciones objetivo, los enfoques heurísticos exploran el espacio de soluciones de manera estratégica para encontrar soluciones satisfactorias sin garantizar necesariamente el óptimo global. Estos enfoques resultan particularmente valiosos en situaciones donde la función objetivo es discontinua, no diferenciable, altamente compleja, o cuando el espacio de búsqueda es tan amplio que hace inviable una exploración exhaustiva.
+
+Dentro de los métodos heurísticos mas destacados y empleados se hallan los algoritmos evolutivos y las colonias de hormigas, ambos inspirados en fenómenos biológicos.
+
+**Algoritmos Evolutivos**
+
+Los algoritmos evolutivos son inspirados por el proceso de evolución biológica y selección natural, operando mediante un ciclo de selección, cruzamiento, y mutación en una población de soluciones candidatas (Mitchell, 1998). Cada solución es evaluada a través de una función de aptitud, determinando su probabilidad de ser seleccionada para la generación de nuevas soluciones. Este ciclo permite que, con el tiempo, las soluciones mas aptas predominen, dirigiendo al algoritmo hacia una solución óptima o satisfactoria.
+
+**Colonias de Hormigas**
+
+Por su parte, las colonias de hormigas simulan el comportamiento colectivo de las hormigas en su búsqueda de alimentos, donde cada hormiga explora el espacio de soluciones siguiendo caminos marcados por feromonas, sustancias químicas que permiten la comunicación entre ellas (Dorigo, Maniezzo, & Colorni, 1996). Las rutas con concentraciones mas altas de feromonas atraen a mas hormigas, favoreciendo la exploración de soluciones prometedoras a través de un proceso de retroalimentación positiva.
+
+**Aplicación de Métodos Heurísticos**
+
+La aplicación de métodos heurísticos para la optimización de funciones de prueba implica varios pasos clave, comenzando por la definición precisa de la función de prueba que representa el problema de optimización. La elección del método heurístico adecuado depende de las características del problema, incluyendo la naturaleza de la función objetivo y las peculiaridades del espacio de búsqueda. La configuración de los parámetros del algoritmo, como el tamaño de la población en los algoritmos evolutivos o el número de hormigas en las colonias de hormigas, es fundamental para la efectividad del método. Posteriormente, se ejecuta el algoritmo y se monitorea su progreso, realizando ajustes en los parámetros según sea necesario para optimizar los resultados.
+
+El empleo de métodos heurísticos en la optimización presenta una alternativa robusta y adaptable para abordar problemas complejos, ofreciendo soluciones aproximadas cuando los enfoques convencionales resultan inadecuados o ineficaces. La inspiración en procesos naturales no solo proporciona una perspectiva innovadora para la resolución de problemas de optimización sino que también abre nuevas posibilidades de investigación y aplicación en áreas como ingeniería, economía, y ciencia de datos.
+
+
+
+
+
+# **Parte 1: optimización numérica**
+
+
+Considere las siguientes funciones de prueba:
+
+**Función de Rosenbrock**
+
+La **Función de Rosenbrock** es conocida por su valle en forma de banana que contiene el mínimo global. Se define como:
+
+$$
+f(x_1, x_2) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2
+$$
+
+con $x_i \in [-2.048, 2.048]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 1$ y $x_2 = 1$.
+
+**Función de Rastrigin**
+
+La **Función de Rastrigin** es una función no convexa utilizada como problema de prueba de rendimiento para algoritmos de optimización debido a su gran cantidad de mínimos locales. Se define como:
+
+$$
+f(x_1, x_2) = 20 + \sum_{i=1}^{2}(x_i^2 - 10 \cos(2\pi x_i))
+$$
+
+con $x_i \in [-5.12, 5.12]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función de Schwefel**
+
+La **Función de Schwefel** es conocida por su complejidad y su paisaje de búsqueda desafiante. Se define como:
+
+$$
+f(x_1, x_2) = 418.9829 \times 2 - \sum_{i=1}^{2}x_i \sin(\sqrt{|x_i|})
+$$
+
+con $x_i \in [-500, 500]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 420.9687$ y $x_2 = 420.9687$.
+
+**Función de Griewank**
+
+La **Función de Griewank** a menudo se utiliza para probar la eficacia de algoritmos de optimización en tratar con oscilaciones grandes y numerosos óptimos locales. Se define como:
+
+$$
+f(x_1, x_2) = \frac{1}{4000}\sum_{i=1}^{2}x_i^2 - \prod_{i=1}^{2}\cos(\frac{x_i}{\sqrt{i}}) + 1
+$$
+
+con $x_i \in [-600, 600]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = 0$.
+
+**Función Goldstein-Price**
+
+La **Función Goldstein-Price** es conocida por tener un valle estrecho que conduce al mínimo global. Se define como:
+
+$$
+\begin{align*}
+f(x_1, x_2) = & [1 + (x_1 + x_2 + 1)^2(19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)]\\
+& \times [30 + (2x_1 - 3x_2)^2(18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)]
+\end{align*}
+$$
+
+con $x_i \in [-2, 2]$, $i = 1, 2$. Alcanza su valor mínimo en $x_1 = 0$ y $x_2 = -1$.
+
+**Función de las seis jorobas de camello (Six-Hump Camel Back)**
+
+La **Función de las seis jorobas de camello** es una función de prueba que presenta dos mínimos globales. Se define como:
+
+$$
+f(x_1, x_2) = (4 - 2.1x_1^2 + \frac{x_1^4}{3})x_1^2 + x_1x_2 + (-4 + 4x_2^2)x_2^2
+$$
+
+con \(x_1 \in [-3, 3]\) y \(x_2 \in [-2, 2]\). Alcanza su valor mínimo en \(x_1 = -0.0898\) y \(x_2 = 0.7126\), y también en \(x_1 = 0.0898\) y \(x_2 = 0.7126\).
+
+
+**Teniendo en cuanta las anteriores funciones realizar los siguientes items:**
+
+
+1. Escoja dos funciones de prueba
+
+2. Optimice las funciones en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria
+
+3. Optimice las funciones en dos y tres dimensiones usando: algoritmos evolutivos, optimización de partículas y evolución diferencial
+
+4. Represente con un gif animado o un video el proceso de optimización de descenso por gradiente y el proceso usando el método heurístico.
+
+
+```{python}
+
+#!pip install pygad
+#!pip install numpy
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+from matplotlib import animation, rc
+from IPython.display import HTML;
+import pygad
+rc('animation', html='html5');
+```
+## 1. Funciones de Prueba
+
+**La funciones de prueba escogidas para probar los métodos de optimización serán las siguientes:**
+
+
+* Función de Rastrigin
+
+* Función de Schwefel
+
+
+```{python}
+# Se implementa la función de Rastrigin vectorizada para arreglos numpy
+def Rastrigin(X):
+  Y = 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+  return Y
+
+# Se implementa la función de Schwefel vectorizada para arreglos numpy
+def Schwefel(X):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    return(Y)
+
+# Visualización de la función de Rastrigin en 2D
+ncols = 100
+nrows = 100
+X1 = np.linspace(-5.12, 5.12, ncols)
+Y1 = np.linspace(-5.12, 5.12, nrows)
+X1, Y1 = np.meshgrid(X1, Y1)
+
+Z1 = [Rastrigin(np.array([X1[i,j], Y1[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z1 = np.array(Z1).reshape([nrows,ncols])
+
+fig, (ax1,ax2) = plt.subplots(1,2)
+fig.set_size_inches(13,5)
+contorno = ax1.contourf(X1,Y1,Z1)
+ax1.set_title("Función de Rastrigin")
+fig.colorbar(contorno, ax=ax1)
+fig.subplots_adjust(wspace=1.5)
+
+# Visualización de la función de Schwefel en 2D
+X2 = np.linspace(-512, 512, ncols*10)
+Y2 = np.linspace(-512, 512, nrows*10)
+X2, Y2 = np.meshgrid(X2, Y2)
+Z2 = [Schwefel(np.array([X2[i,j], Y2[i,j]])) for i in range(nrows*10) for j in range(ncols*10)]
+Z2 = np.array(Z2).reshape([nrows*10,ncols*10])
+contorno2 = ax2.contourf(X2,Y2,Z2)
+fig.colorbar(contorno2, ax=ax2)
+ax2.set_title("Función de Schewfel")
+
+
+plt.tight_layout()
+plt.show()
+```
+
+
+**Función de Rastrigin (izquierda):**
+
+La gráfica muestra una superficie repleta de picos y valles regulares y simétricos, característicos de la Función de Rastrigin. Esta función es conocida por su gran número de mínimos locales que dificultan encontrar el mínimo global. Los colores mas oscuros representan valores mas bajos de la función, y los mas claros, valores mas altos. El patrón periódico de los mínimos locales es claramente visible y sugiere la complejidad de utilizar métodos de optimización que no se basan en gradientes para encontrar el óptimo global, que se sitúa en el centro de la gráfica donde se observa un mínimo profundo y distinto.
+
+**Función de Schwefel (derecha):**
+
+La gráfica para la Función de Schwefel muestra una estructura mas compleja con una serie de anillos concéntricos que representan los niveles de la función. La Función de Schwefel es conocida por tener un mínimo global pronunciado, pero rodeado de zonas que llevan a mínimos locales subóptimos, lo cual puede engañar a los algoritmos de búsqueda. Los valores mas bajos en esta función se indican con un color oscuro, ubicados cerca del centro de la gráfica, que es donde se encuentra el mínimo global. La amplia gama de colores refleja la amplia variedad de valores que la función puede tomar, lo que indica un paisaje de optimización desafiante con múltiples mínimos locales.
+
+
+**Visualización en 3D**
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Definición de las funciones
+def Rastrigin(X):
+    return 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+
+def Schwefel(X):
+    return 418.9829 * len(X) - np.sum(X * np.sin(np.sqrt(np.abs(X))))
+
+# Creación de la malla para graficar
+ncols, nrows = 100, 100
+X1 = np.linspace(-5.12, 5.12, ncols)
+Y1 = np.linspace(-5.12, 5.12, nrows)
+X1, Y1 = np.meshgrid(X1, Y1)
+Z1 = np.array([Rastrigin(np.array([x, y])) for x, y in zip(np.ravel(X1), np.ravel(Y1))])
+Z1 = Z1.reshape(X1.shape)
+
+# Graficar Rastrigin en 3D
+fig = plt.figure(figsize=(14, 7))
+
+# Rastrigin
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.plot_surface(X1, Y1, Z1, cmap='viridis')
+ax1.set_title("Función de Rastrigin")
+ax1.set_xlabel('X1')
+ax1.set_ylabel('Y1')
+ax1.set_zlabel('Z1')
+
+# Ajuste para la función de Schwefel
+ncols, nrows = 1000, 1000
+X2 = np.linspace(-500, 500, ncols)
+Y2 = np.linspace(-500, 500, nrows)
+X2, Y2 = np.meshgrid(X2, Y2)
+Z2 = np.array([Schwefel(np.array([x, y])) for x, y in zip(np.ravel(X2), np.ravel(Y2))])
+Z2 = Z2.reshape(X2.shape)
+
+# Schwefel
+ax2 = fig.add_subplot(122, projection='3d')
+ax2.plot_surface(X2, Y2, Z2, cmap='viridis')
+ax2.set_title("Función de Schwefel")
+ax2.set_xlabel('X2')
+ax2.set_ylabel('Y2')
+ax2.set_zlabel('Z2')
+
+plt.tight_layout()
+plt.show()
+
+```
+
+Las gráficas 3D muestran claramente la topología de las funciones de Rastrigin y Schwefel. Rastrigin tiene un paisaje ondulado con numerosos mínimos locales, mientras que Schwefel presenta un paisaje mas suave con un mínimo global prominente. Estas visualizaciones resaltan la complejidad inherente a cada función
+
+
+## 2. Optimización mediante descenso por gradiente
+
+
+
+A continuación, presentamos las implementaciones de las funciones necesarias para calcular el gradiente. Ademas, introducimos el método de descenso por gradiente, una técnica de optimización que utilizaremos para hallar los mínimos de las funciones objetivo. Este enfoque iterativo nos permitirá afinar progresivamente nuestras estimaciones hacia el punto de óptimo global.
+
+
+
+
+```{python}
+# La siguiente función implementa el cálculo del gradiente usando 'list comprehension'
+def num_grad(x, fun, h=0.01):
+    return np.array([(fun(x+e*h) - fun(x-e*h)) / (2*h) for e in np.eye(len(x))])
+
+# La siguiente función implmenta la optimización mediante descenso por gradiente
+def optimizador_mult_numdev(f, x0, eta=0.01, tol=1e-6, max_iter=1e3):
+    x = np.array(x0)
+    iter = 0
+    while np.linalg.norm(num_grad(x, f, h=0.01)) > tol and iter < max_iter:
+        x = x - eta*num_grad(x, f, h=0.01)
+        iter += 1
+    return x
+```
+
+### 2.1 Función de Rastrigin
+
+#### Generación del gráfico
+
+Se procede a definir las características del gráfico que representará todo.
+
+
+ ```{python}
+
+ x0 = np.array([4*np.random.random()-1,4*np.random.random()-1])
+ xs = [x0]
+
+ for i in range(25):
+    x_new = optimizador_mult_numdev(Rastrigin, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+ ```
+
+
+
+
+```{python}
+# Particionamiento del rango de cada variable
+ncols = 100
+nrows = 100
+X = np.linspace(-3.12, 3.12, ncols)  #Posibles valores de X
+Y = np.linspace(-3.12, 3.12, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [Rastrigin(np.array([X[i,j], Y[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot(xs[-1][0], xs[-1][1], 'xr--',mec='b', markersize=10) #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Rastrigin')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+
+
+En el gráfico anterior, se destaca el punto que representa el mínimo encontrado a través del método de descenso por gradiente. A continuación, presentaremos un GIF animado que muestra el conjunto de soluciones halladas en cada iteración del proceso hasta alcanzar la solución óptima. Esta visualización animada brinda una perspectiva clara y dinámica de cómo el algoritmo de descenso por gradiente avanza iterativamente a través del espacio de soluciones, acercándose paso a paso al punto de mínimo global de la función de Rastrigin. Este enfoque no solo facilita la comprensión del proceso de optimización, sino que también ilustra de manera efectiva la eficacia del algoritmo en la búsqueda de soluciones óptimas.
+
+
+```{python}
+
+
+from matplotlib import rc
+rc('animation', html='jshtml')
+
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*xs[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+```
+
+### Optimización en 3D
+
+
+
+La siguiente gráfica ilustra el punto mínimo de la función de Rastrigin en tres dimensiones. Es notable que este mínimo está destacado en color rojo.
+
+
+
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def Rastrigin(x):
+    A = 10
+    return A * len(x) + sum([(xi ** 2 - A * np.cos(2 * np.pi * xi)) for xi in x])
+
+def num_grad(x, fun, h=0.001):
+    return np.array([(fun(x + e * h) - fun(x - e * h)) / (2 * h) for e in np.eye(len(x))])
+
+def optimizador_mult_numdev(f, x0, eta=0.0001, tol=1e-6, max_iter=1e4):
+    x = np.array(x0)
+    iter = 0
+    while np.linalg.norm(num_grad(x, f)) > tol and iter < max_iter:
+        x = x - eta * num_grad(x, f)
+        iter += 1
+    return x
+
+ncols, nrows = 100, 100
+X1 = np.linspace(-5.12, 5.12, ncols)
+Y1 = np.linspace(-5.12, 5.12, nrows)
+X1, Y1 = np.meshgrid(X1, Y1)
+Z1 = np.array([Rastrigin(np.array([x, y])) for x, y in zip(np.ravel(X1), np.ravel(Y1))])
+Z1 = Z1.reshape(X1.shape)
+
+# Ajustar el punto inicial si es necesario
+xmin = optimizador_mult_numdev(Rastrigin, [-3.0, 3.0], eta=0.01, max_iter=10000)  
+zmin = Rastrigin(xmin)
+
+# Graficar
+fig = plt.figure(figsize=(14, 7))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(X1, Y1, Z1, cmap='viridis', edgecolor='none', alpha=0.7)
+ax.scatter(xmin[0], xmin[1], zmin, color='r', s=50, label=f'Punto mínimo encontrado en {xmin} con valor {zmin}')
+ax.set_title("Función de Rastrigin con punto mínimo")
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.legend()
+
+plt.show()
+
+```
+
+
+
+
+El comportamiento del optimizador de descenso por gradiente, partiendo de un punto inicial $(-3, 3)$ y moviéndose hacia aproximadamente $(-2.96, 2.96)$ con un valor de función de 41, evidencia las limitaciones al enfrentar la compleja función de Rastrigin. Esta mejora, sin alcanzar el mínimo global, subraya las dificultades debido a la naturaleza multimodal de Rastrigin, caracterizada por abundantes mínimos locales. El resultado demuestra la capacidad del optimizador para progresar en un espacio desafiante, utilizando información local del gradiente en su búsqueda de optimización.
+
+
+### 2.2 Función de Schwefel
+
+[texto del vínculo](https://)Con las funciones de derivadas parciales y 
+
+de optimización ya implementadas, sólo resta recalcular los datos para la función de Schwefel y generar el gráfico.
+
+
+```{python}
+def optimizador_mult_numdev(f, x0, eta=0.0001, tol=1e-6, max_iter=1e4):
+    x = np.array(x0)
+    iter = 0
+    while np.linalg.norm(num_grad(x, f)) > tol and iter < max_iter:
+        x = x - eta * num_grad(x, f, h = 1e-4)
+        iter += 1
+    return x
+np.random.seed(42)
+# Implementación del método de descenso por gradiente
+x0 = np.array([300*(2*np.random.random()-1),300*(2*np.random.random()-1)]) # generación de un punto aleatorio
+#print(x0)
+#xs = [x0]
+for i in range(25):
+    x_new = optimizador_mult_numdev(Schwefel, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+print(xs)
+```
+
+```{python}
+# Particionamiento del rango de cada variable
+ncols = 1000
+nrows = 1000
+X = np.linspace(-512, 512, ncols)  #Posibles valores de X
+Y = np.linspace(-512, 512, nrows)  #Posibles valores de Y
+X, Y = np.meshgrid(X, Y)  #Definición del plano con posibles valores
+
+# Evaluación de la función de Rastrigin
+Z = [Schwefel(np.array([X[i,j], Y[i,j]])) for i in range(nrows) for j in range(ncols)]
+Z = np.array(Z).reshape([nrows,ncols])
+
+fig, ax = plt.subplots()
+fig.set_size_inches(10,7)
+contorno = ax.contour(X,Y,Z)  #Curvas de nivel de la función de Rastrigin
+contornof = ax.contourf(X,Y,Z) #Rellenando las curvas de nivel
+line, = ax.plot(xs[-1][0], xs[1][1], 'xr--',mec='b') #Creando la línea que contendrá los puntos
+              # de la animación de Optimización
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Función de Schwefel')
+plt.colorbar(contornof) # Se muestra la barra lateral con la escala de valores
+          # ¡¡Éste método depende de la creación de un objeto "contourf" !!
+plt.show()
+```
+
+Durante la ejecución del optimizador de descenso por gradiente aplicado a la función de Schwefel, el punto de inicio aleatorio seleccionado fue $(-75.28, 270.43)$. El optimizador convergió hacia el punto $(-65.56, 302.46)$, que está significativamente alejado del mínimo global conocido de la función. Esta dificultad para alcanzar el mínimo global puede atribuirse a la presencia de numerosos mínimos locales en la función de Schwefel, un desafío común para los métodos de optimización basados en el gradiente. Ademas, se realizó una exploración variando el valor de $\eta$, observándose que la reducción de este parámetro resultaba en una ejecución mas lenta del algoritmo. En una sección posterior, se ilustrará este proceso de optimización mediante un GIF, que ofrecerá una visualización de la trayectoria seguida por el optimizador en su búsqueda de los valores mínimos encontrados.
+
+
+
+```{python}
+
+# Implementación del método de descenso por gradiente
+x0 = np.array([300*(2*np.random.random()-1),300*(2*np.random.random()-1)]) # generación de un punto aleatorio
+xs = [x0]
+for i in range(25):
+    x_new = optimizador_mult_numdev(Schwefel, x0)
+    xs.append(x_new)
+    x0 = x_new
+
+# Definición de la función graficadora
+def graficar(frame):
+    x, y = zip(*xs[:frame+1])
+    line.set_data(x, y)
+    return line,
+
+# Animación final
+ani = animation.FuncAnimation(fig, graficar, frames=len(xs), interval=300)
+ani
+
+```
+
+### Optimización en 3D
+
+La optimización en tres dimensiones de la función de Schwefel no consigue ubicar el mínimo global, sin embargo, evidencia un avance significativo hacia este. La gráfica subsiguiente ilustra la secuencia de puntos descubiertos durante el proceso de optimización, lo cual demuestra el progresivo acercamiento hacia la región de mínimo valor en la función objetivo.
+
+```{python}
+#!pip install plotly
+```
+
+```{python}
+np.random.seed(42)
+x0 = np.array([300*(2*np.random.random()-1) for _ in range(3)])  # Punto inicial en 3D
+print(f"Punto inicial: {x0}")
+
+xs = [x0]  # Almacenará todos los puntos por los que pasa el optimizador
+for i in range(25):
+    x_new = optimizador_mult_numdev(Schwefel, x0, eta=0.0001, tol=1e-6, max_iter=10000)
+    xs.append(x_new)
+    x0 = x_new
+
+xs = np.array(xs)  # Convertir a un array de Numpy para facilitar la manipulación
+
+```
+
+```{python}
+
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Trayectoria del optimizador
+ax.plot(xs[:,0], xs[:,1], xs[:,2], marker='o', linestyle='-', color='r', label='Trayectoria del Optimizador')
+
+ax.set_title('Trayectoria del Optimizador de Descenso por Gradiente en la Función de Schwefel')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.legend()
+
+plt.show()
+
+```
+
+
+Mediante la visualización interactiva en tres dimensiones, se confirma que, al igual que en el caso bidimensional, el optimizador no alcanza el mínimo global de la función de Schwefel. Este resultado es consecuencia de la abundancia de mínimos locales que caracterizan a esta función. No obstante, es interesante observar que, pese a la selección aleatoria del punto inicial, el optimizador no queda atrapado en ninguno de estos mínimos locales, lo cual sugiere una dinámica de búsqueda que consigue evitar estancamientos prematuros en la exploración del espacio de soluciones.
+
+
+
+
+
+```{python}
+import plotly.graph_objs as go
+import numpy as np
+
+# Definir la función de Schwefel para tres dimensiones
+def Schwefel(x):
+    return 418.9829 * len(x) - sum([xi * np.sin(np.sqrt(abs(xi))) for xi in x])
+
+# Generar datos para la superficie de la función de Schwefel
+x = np.linspace(-500, 500, 100)
+y = np.linspace(-500, 500, 100)
+X, Y = np.meshgrid(x, y)
+Z = np.array([Schwefel([X[i][j], Y[i][j], 0]) for i in range(X.shape[0]) for j in range(X.shape[1])])
+Z = Z.reshape(X.shape)
+
+# Generar el punto optimizado (aquí necesitas tus valores optimizados)
+x_opt = [420.9687, 420.9687, 0]  # Reemplaza con el resultado de tu optimización
+z_opt = Schwefel(x_opt)
+
+# Crear la figura
+fig = go.Figure(data=[
+    go.Surface(z=Z, x=X, y=Y, colorscale='Viridis'),
+    go.Scatter3d(x = xs[:,0], y = xs[:,1], z = xs[:,2], mode='markers', marker=dict(size=5, color='red'))
+])
+
+# Actualizar el layout de la figura
+fig.update_layout(title='Función de Schwefel con Punto Optimizado en 3D', autosize=False,
+                  width=700, height=700,
+                  margin=dict(l=65, r=50, b=65, t=90))
+
+# Mostrar la figura
+fig.show()
+
+```
+
+
+
+
+
+## 3. Optimización mediante algoritmos evolutivos
+
+
+
+
+
+
+
+### 3.1 Función de Rastrigin
+
+#### - Optimización de la función de Rastrigin
+
+Se configura un algoritmo genético mediante la biblioteca PyGAD para la optimización de la función de Rastrigin. La configuración se detalla de la siguiente manera:
+
+* El algoritmo iterará a través de 60 generaciones.
+
+* En cada generación se cruzarán dos individuos.
+
+* La función objetivo que guiará la adaptación de los individuos es la propia función de Rastrigin.
+
+* Cada generación estará compuesta por una población de 9 individuos.
+
+* La selección para la reproducción se basará en la elección de los individuos mas aptos.
+
+* La mutación de los individuos seguirá una estrategia aleatoria.
+
+* Esta configuración establece los parámetros operativos fundamentales del algoritmo genético y se orienta a la optimización efectiva de la compleja función de Rastrigin.
+
+```{python}
+#!pip install pygad==3.3.0
+
+```
+
+
+
+Una vez creada la instancia de nuestro algoritmo, ejecutamos la optimización mediante el algoritmo evolutivo y mostramos la evolución del ajuste generación tras generación
+
+ga_instance_rastrigin = pygad.GA(num_generations=1,  # We'll manually loop for more generations
+                                 num_parents_mating=2,
+                                 fitness_func=Rastrigin_ga,
+                                 sol_per_pop=10,
+                                 num_genes=3,
+                                 init_range_low=-5.12,
+                                 init_range_high=5.12)
+
+
+```{python}
+import pygad
+
+# Define your fitness function
+def Rastrigin_ga(solution, solution_idx):
+    X = solution
+    Y = 10 * len(X) + sum([(x ** 2 - 10 * np.cos(2 * np.pi * x)) for x in X])
+    fitness = -Y
+    return fitness
+
+# Initialize the GA
+ga_instance_rastrigin = pygad.GA(num_generations=1,  # We'll manually loop for more generations
+                                 num_parents_mating=2,
+                                 fitness_func=Rastrigin_ga,
+                                 sol_per_pop=10,
+                                 num_genes=3,
+                                 init_range_low=-5.12,
+                                 init_range_high=5.12)
+
+fitness_history = []
+
+# Manually run the GA for multiple generations
+for generation in range(60):
+    ga_instance_rastrigin.run()
+    best_solution, best_solution_fitness, best_solution_idx = ga_instance_rastrigin.best_solution()
+    fitness_history.append(best_solution_fitness)
+    # print("Generation : ", generation + 1)
+    # print("Fitness of the best solution :", best_solution_fitness)
+
+# You can plot the fitness history using Matplotlib if desired.
+import matplotlib.pyplot as plt
+plt.plot(fitness_history)
+plt.title('Fitness Evolution Over Generations')
+plt.xlabel('Generation')
+plt.ylabel('Fitness')
+plt.show()
+
+```
+
+En la gráfica anterior, se puede observar la trayectoria de optimización del algoritmo genético PyGAD en función del número de generaciones. Se aprecia una marcada mejora en la aptitud durante las etapas iniciales, con un rápido incremento hacia valores mas óptimos. Este progreso temprano sugiere que el algoritmo es eficiente en la identificación de soluciones prometedoras desde el principio. Tras esta fase de mejoras significativas, la curva se nivela, lo cual indica que el algoritmo ha llegado a un punto de convergencia y se están haciendo menos descubrimientos de nuevas soluciones óptimas a medida que avanza el número de generaciones. La estabilidad de la aptitud hacia el final de las iteraciones sugiere que se ha alcanzado un punto cercano al óptimo, donde las subsiguientes evoluciones ofrecen ganancias marginales en el desempeño o aptitud del modelo.
+
+#### - Muestra de gráficos
+
+
+La gráfica siguiente exhibe el punto óptimo encontrado por el algoritmo genético, marcado con una 'X', situado en una zona de bajo valor, que indica un rendimiento superior en la tarea de optimización en comparación con el método de descenso por gradiente. Este resultado resalta la habilidad del algoritmo genético para evitar los mínimos locales y dirigirse hacia una solución mas cercana al mínimo global, lo que demuestra su eficacia en la exploración del espacio de soluciones y su ventaja sobre métodos basados en el gradiente en escenarios de optimización complejos.
+
+
+
+```{python}
+
+
+import pygad
+import numpy as np
+
+def Rastrigin_ga(solution, solution_idx):
+    X = solution
+    Y = 10 * len(X) + np.sum(X ** 2 - 10 * np.cos(2 * np.pi * X))
+    return -Y  # We will maximize this, hence the negative sign
+
+# Define the GA
+ga_instance = pygad.GA(num_generations=60,
+                       num_parents_mating=2,
+                       fitness_func=Rastrigin_ga,
+                       sol_per_pop=10,
+                       num_genes=2,
+                       init_range_low=-5.12,
+                       init_range_high=5.12)
+
+# Run the GA
+ga_instance.run()
+
+# Collect the best solution after the final generation
+best_solution = ga_instance.best_solution()[0]
+
+print(best_solution)
+```
+
+
+```{python}
+
+import matplotlib.pyplot as plt
+
+# Prepare the grid and evaluate the function
+ncols, nrows = 100, 100
+X = np.linspace(-5.12, 5.12, ncols)
+Y = np.linspace(-5.12, 5.12, nrows)
+X, Y = np.meshgrid(X, Y)
+Z = np.array([Rastrigin_ga(np.array([x, y]), None) for x, y in zip(X.ravel(), Y.ravel())]).reshape(X.shape)
+
+# Plotting
+fig, ax = plt.subplots()
+fig.set_size_inches(10, 7)
+contour = ax.contour(X, Y, Z, levels=50)
+contourf = ax.contourf(X, Y, Z, levels=50)
+plt.colorbar(contourf, ax=ax)
+
+# Plot the best solution
+ax.plot(best_solution[0], best_solution[1], 'rx', markersize=10, label='Best Solution')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Rastrigin Function with GA Optimization')
+ax.legend()
+
+plt.show()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+### 3.2 Función de Schwefel
+
+
+#### - Optimización de la función de Schwefel
+
+Aquí se crea una instancia de nuestro algoritmo genético usando pygad para optimizar la función de Schwefel.
+
+Especificaciones de los parámetros:
+
+* Se usa un número de generaciones de 60
+* Se emparejan 2 individuos en cada generación
+* La función de ajuste será nuestra función de prueba
+* Se tomarán 9 individuos en cada generación
+* El criterio de selección de reproducción : mejores individuos
+* Tipo de mutación: Aleatoria
+
+```{python}
+#!pip install --upgrade pygad
+
+```
+
+
+```{python}
+
+
+import pygad
+
+# Define your fitness function
+def Schwefel_ga(X,solutionidx):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    fitness = -Y
+    return(fitness)
+
+# Initialize the GA
+ga_instance_rastrigin = pygad.GA(num_generations=1,  # We'll manually loop for more generations
+                                 num_parents_mating=2,
+                                 fitness_func=Schwefel_ga,
+                                 sol_per_pop=10,
+                                 num_genes=3,
+                                 init_range_low=-5.12,
+                                 init_range_high=5.12)
+
+fitness_history = []
+
+# Manually run the GA for multiple generations
+for generation in range(60):
+    ga_instance_rastrigin.run()
+    best_solution, best_solution_fitness, best_solution_idx = ga_instance_rastrigin.best_solution()
+    fitness_history.append(best_solution_fitness)
+    # print("Generation : ", generation + 1)
+    # print("Fitness of the best solution :", best_solution_fitness)
+
+# You can plot the fitness history using Matplotlib if desired.
+import matplotlib.pyplot as plt
+plt.plot(fitness_history)
+plt.title('Fitness Evolution Over Generations')
+plt.xlabel('Generation')
+plt.ylabel('Fitness')
+plt.show()
+
+
+```
+
+Tras configurar nuestra instancia del algoritmo genético, orientada específicamente a la optimización de la función de Schwefel, procedemos con la ejecución del proceso evolutivo. Durante esta fase, el algoritmo emprende una busqueda sistemática a través de las generaciones para optimizar la adaptación de las soluciones. A medida que avanza, capturamos y visualizamos el progreso de la aptitud de las soluciones, generación tras generación, ilustrando así la eficacia del algoritmo en su camino hacia la localización de un óptimo cercano al mínimo global. Este proceso nos permite observar de forma clara cómo el algoritmo genético mejora y refina las soluciones con cada iteración.
+
+
+#### - Muestra de gráficos
+
+Tras regenerar el gráfico y marcar el valor óptimo encontrado, se observa que este dista del verdadero mínimo global. Esta discrepancia subraya la complejidad inherente a la función de Schwefel, que, debido a su paisaje lleno de mínimos locales, plantea un desafío significativo para el algoritmo. No obstante, ajustando y experimentando con distintos parámetros dentro de la configuración de pygad.GA, es plausible que se mejore la capacidad del algoritmo para acercarse mas al mínimo global. Tales ajustes pueden incluir la modificación del tamaño de la población, la tasa de mutación, o la estrategia de selección, entre otros, lo cual podría optimizar la búsqueda y posiblemente conducir a resultados mas precisos.
+
+
+
+
+```{python}
+
+
+import pygad
+import numpy as np
+def Schwefel_ga(X,solutionidx):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    fitness = -Y
+    return(fitness)
+# Define the GA
+ga_instance = pygad.GA(num_generations=60,
+                       num_parents_mating=2,
+                       fitness_func=Schwefel_ga,
+                       sol_per_pop=10,
+                       num_genes=2,
+                       init_range_low=-5.12,
+                       init_range_high=5.12)
+
+# Run the GA
+ga_instance.run()
+
+# Collect the best solution after the final generation
+best_solution = ga_instance.best_solution()[0]
+print(best_solution)
+```
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Definir la función de fitness modificada para graficar
+def Schwefel_ga(ga_instance, X, solution_idx):
+    Y = np.sum(X * np.sin(np.sqrt(np.abs(X))))
+    fitness = -Y
+    return fitness
+
+# Preparar la cuadrícula y evaluar la función
+ncols, nrows = 100, 100
+X = np.linspace(-5.12, 5.12, ncols)
+Y = np.linspace(-5.12, 5.12, nrows)
+X, Y = np.meshgrid(X, Y)
+
+# Evaluar la función Schwefel en la cuadrícula, pasando `None` para `ga_instance` y un valor arbitrario para `solution_idx`
+Z = np.array([Schwefel_ga(None, np.array([x, y]), 0) for x, y in zip(X.ravel(), Y.ravel())]).reshape(X.shape)
+
+# Graficar
+fig, ax = plt.subplots()
+fig.set_size_inches(10, 7)
+contour = ax.contour(X, Y, Z, levels=50)
+contourf = ax.contourf(X, Y, Z, levels=50)
+plt.colorbar(contourf, ax=ax)
+
+# Graficar la mejor solución
+ax.plot(best_solution[0], best_solution[1], 'rx', markersize=10, label='Best Solution')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Schwefel Function with GA Optimization')
+ax.legend()
+
+plt.show()
+
+```
+
+
+
+
+# Punto 2. Problema del vendedor viajero
+
+El problema del vendedor viajero es un desafío clásico en la optimización, buscando la ruta mas corta para visitar todas las ciudades en una lista y regresar al punto de partida. Para abordar este problema, se pueden utilizar diferentes algoritmos. 
+El algoritmo de las hormigas simula el comportamiento de las hormigas para encontrar rutas óptimas, mientras que el algoritmo genético se basa en principios evolutivos para buscar soluciones eficientes mediante la generación y evolución de poblaciones de soluciones posibles. Ambos enfoques ofrecen estrategias interesantes para resolver este desafío de optimización de rutas.
+
+
+
+```{python}
+#%%capture
+#importacion de librerias necesarias
+
+
+#%pip install --upgrade pygad
+
+#!pip install pygad==2.5.0
+#!pip install pyproj
+#!pip install geopandas
+#!pip install matplotlib
+#!pip install shapely
+#!pip install pandas
+#!pip install imageio
+#!pip install pandas openpyxl
+```
+
+
+```{python}
+import numpy as np
+import pyproj
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import random
+from shapely.geometry import Point
+import os
+import pygad
+import itertools
+from matplotlib import animation, rc
+import pandas as pd
+import imageio
+
+#from pygad import gann
+```
+
+## Algoritmo Hormigas
+
+
+El algoritmo de las hormigas es un método de optimización inspirado en el comportamiento de las hormigas cuando buscan comida. En este algoritmo, se simula el proceso natural mediante el cual las hormigas exploran aleatoriamente su entorno en busca de comida. Cuando una hormiga encuentra alimento, regresa al nido dejando un rastro de feromonas en su camino. Estas feromonas atraen a otras hormigas hacia la fuente de comida. A medida que mas hormigas siguen el rastro de feromonas, el camino con una mayor concentración de feromonas se convierte en la ruta preferida. Este enfoque de marcado y seguimiento de caminos con feromonas se utiliza en el algoritmo de las hormigas para encontrar la ruta mas corta en un grafo, donde los caminos mas cortos acumulan feromonas y se vuelven mas atractivos para la exploración de otras hormigas virtuales, generando así soluciones cercanas a la óptima en problemas de optimización de rutas.
+
+https://github.com/johnberroa/Ant-Colony-Optimization/blob/master/AntColonyOptimizer.py
+
+
+
+```{python}
+%%capture
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+
+import warnings
+
+warnings.filterwarnings("ignore")
+
+
+class AntColonyOptimizer:
+    def __init__(self, ants, evaporation_rate, intensification, alpha=1.0, beta=0.0, beta_evaporation_rate=0,
+                 choose_best=.1):
+        """
+        Ant colony optimizer.  Traverses a graph and finds either the max or min distance between nodes.
+        :param ants: number of ants to traverse the graph
+        :param evaporation_rate: rate at which pheromone evaporates
+        :param intensification: constant added to the best path
+        :param alpha: weighting of pheromone
+        :param beta: weighting of heuristic (1/distance)
+        :param beta_evaporation_rate: rate at which beta decays (optional)
+        :param choose_best: probability to choose the best route
+        """
+        # Parameters
+        self.ants = ants
+        self.evaporation_rate = evaporation_rate
+        self.pheromone_intensification = intensification
+        self.heuristic_alpha = alpha
+        self.heuristic_beta = beta
+        self.beta_evaporation_rate = beta_evaporation_rate
+        self.choose_best = choose_best
+
+        # Internal representations
+        self.pheromone_matrix = None
+        self.heuristic_matrix = None
+        self.probability_matrix = None
+
+        self.map = None
+        self.set_of_available_nodes = None
+
+        # Internal stats
+        self.best_series = []
+        self.best = None
+        self.fitted = False
+        self.best_path = None
+        self.fit_time = None
+
+        # Plotting values
+        self.stopped_early = False
+
+    def __str__(self):
+        string = "Ant Colony Optimizer"
+        string += "\n--------------------"
+        string += "\nDesigned to optimize either the minimum or maximum distance between nodes in a square matrix that behaves like a distance matrix."
+        string += "\n--------------------"
+        string += "\nNumber of ants:\t\t\t\t{}".format(self.ants)
+        string += "\nEvaporation rate:\t\t\t{}".format(self.evaporation_rate)
+        string += "\nIntensification factor:\t\t{}".format(
+            self.pheromone_intensification)
+        string += "\nAlpha Heuristic:\t\t\t{}".format(self.heuristic_alpha)
+        string += "\nBeta Heuristic:\t\t\t\t{}".format(self.heuristic_beta)
+        string += "\nBeta Evaporation Rate:\t\t{}".format(
+            self.beta_evaporation_rate)
+        string += "\nChoose Best Percentage:\t\t{}".format(self.choose_best)
+        string += "\n--------------------"
+        string += "\nUSAGE:"
+        string += "\nNumber of ants influences how many paths are explored each iteration."
+        string += "\nThe alpha and beta heuristics affect how much influence the pheromones or the distance heuristic weigh an ants' decisions."
+        string += "\nBeta evaporation reduces the influence of the heuristic over time."
+        string += "\nChoose best is a percentage of how often an ant will choose the best route over probabilistically choosing a route based on pheromones."
+        string += "\n--------------------"
+        if self.fitted:
+            string += "\n\nThis optimizer has been fitted."
+        else:
+            string += "\n\nThis optimizer has NOT been fitted."
+        return string
+
+    def _initialize(self):
+        """
+        Initializes the model by creating the various matrices and generating the list of available nodes
+        """
+        assert self.map.shape[0] == self.map.shape[1], "Map is not a distance matrix!"
+        num_nodes = self.map.shape[0]
+        self.pheromone_matrix = np.ones((num_nodes, num_nodes))
+        # Remove the diagonal since there is no pheromone from node i to itself
+        self.pheromone_matrix[np.eye(num_nodes) == 1] = 0
+        self.heuristic_matrix = 1 / self.map
+        self.probability_matrix = (self.pheromone_matrix ** self.heuristic_alpha) * (
+            self.heuristic_matrix ** self.heuristic_beta)  # element by element multiplcation
+        self.set_of_available_nodes = list(range(num_nodes))
+
+    def _reinstate_nodes(self):
+        """
+        Resets available nodes to all nodes for the next iteration
+        """
+        self.set_of_available_nodes = list(range(self.map.shape[0]))
+
+    def _update_probabilities(self):
+        """
+        After evaporation and intensification, the probability matrix needs to be updated.  This function
+        does that.
+        """
+        self.probability_matrix = (self.pheromone_matrix ** self.heuristic_alpha) * (
+            self.heuristic_matrix ** self.heuristic_beta)
+
+    def _choose_next_node(self, from_node):
+        """
+        Chooses the next node based on probabilities.  If p < p_choose_best, then the best path is chosen, otherwise
+        it is selected from a probability distribution weighted by the pheromone.
+        :param from_node: the node the ant is coming from
+        :return: index of the node the ant is going to
+        """
+        numerator = self.probability_matrix[from_node,
+                                            self.set_of_available_nodes]
+        if np.random.random() < self.choose_best:
+            next_node = np.argmax(numerator)
+        else:
+            denominator = np.sum(numerator)
+            probabilities = numerator / denominator
+            next_node = np.random.choice(
+                range(len(probabilities)), p=probabilities)
+        return next_node
+
+    def _remove_node(self, node):
+        self.set_of_available_nodes.remove(node)
+
+    def _evaluate(self, paths, mode):
+        """
+        Evaluates the solutions of the ants by adding up the distances between nodes.
+        :param paths: solutions from the ants
+        :param mode: max or min
+        :return: x and y coordinates of the best path as a tuple, the best path, and the best score
+        """
+        scores = np.zeros(len(paths))
+        coordinates_i = []
+        coordinates_j = []
+        for index, path in enumerate(paths):
+            score = 0
+            coords_i = []
+            coords_j = []
+            for i in range(len(path) - 1):
+                coords_i.append(path[i])
+                coords_j.append(path[i + 1])
+                score += self.map[path[i], path[i + 1]]
+            scores[index] = score
+            coordinates_i.append(coords_i)
+            coordinates_j.append(coords_j)
+        if mode == 'min':
+            best = np.argmin(scores)
+        elif mode == 'max':
+            best = np.argmax(scores)
+        return (coordinates_i[best], coordinates_j[best]), paths[best], scores[best]
+
+    def _evaporation(self):
+        """
+        Evaporate some pheromone as the inverse of the evaporation rate.  Also evaporates beta if desired.
+        """
+        self.pheromone_matrix *= (1 - self.evaporation_rate)
+        self.heuristic_beta *= (1 - self.beta_evaporation_rate)
+
+    def _intensify(self, best_coords):
+        """
+        Increases the pheromone by some scalar for the best route.
+        :param best_coords: x and y (i and j) coordinates of the best route
+        """
+        i = best_coords[0]
+        j = best_coords[1]
+        self.pheromone_matrix[i, j] += self.pheromone_intensification
+
+    def fit(self, map_matrix, iterations=100, mode='min', early_stopping_count=20, verbose=True):
+        """
+        Fits the ACO to a specific map.  This was designed with the Traveling Salesman problem in mind.
+        :param map_matrix: Distance matrix or some other matrix with similar properties
+        :param iterations: number of iterations
+        :param mode: whether to get the minimum path or maximum path
+        :param early_stopping_count: how many iterations of the same score to make the algorithm stop early
+        :return: the best score
+        """
+        # if verbose:
+        #     print("Beginning ACO Optimization with {} iterations...".format(iterations))
+        self.map = map_matrix
+        start = time.time()
+        self._initialize()
+        num_equal = 0
+
+        for i in range(iterations):
+            start_iter = time.time()
+            paths = []
+            path = []
+
+            for ant in range(self.ants):
+                current_node = self.set_of_available_nodes[np.random.randint(
+                    0, len(self.set_of_available_nodes))]
+                start_node = current_node
+                while True:
+                    path.append(current_node)
+                    self._remove_node(current_node)
+                    if len(self.set_of_available_nodes) != 0:
+                        current_node_index = self._choose_next_node(
+                            current_node)
+                        current_node = self.set_of_available_nodes[current_node_index]
+                    else:
+                        break
+
+                path.append(start_node)  # go back to start
+                self._reinstate_nodes()
+                paths.append(path)
+                path = []
+
+            best_path_coords, best_path, best_score = self._evaluate(
+                paths, mode)
+
+            if i == 0:
+                best_score_so_far = best_score
+            else:
+                if mode == 'min':
+                    if best_score < best_score_so_far:
+                        best_score_so_far = best_score
+                        self.best_path = best_path
+                elif mode == 'max':
+                    if best_score > best_score_so_far:
+                        best_score_so_far = best_score
+                        self.best_path = best_path
+
+            if best_score == best_score_so_far:
+                num_equal += 1
+            else:
+                num_equal = 0
+
+            self.best_series.append(best_score)
+            self._evaporation()
+            self._intensify(best_path_coords)
+            self._update_probabilities()
+
+            # if verbose:
+            #     print("Best score at iteration {}: {}; overall: {} ({}s)"
+            #           "".format(i, round(best_score, 2), round(best_score_so_far, 2),
+            #                     round(time.time() - start_iter)))
+
+            if best_score == best_score_so_far and num_equal == early_stopping_count:
+                self.stopped_early = True
+                # print("Stopping early due to {} iterations of the same score.".format(
+                #     early_stopping_count))
+                break
+
+        self.fit_time = round(time.time() - start)
+        self.fitted = True
+
+        if mode == 'min':
+            self.best = self.best_series[np.argmin(self.best_series)]
+            # if verbose:
+            #     print(
+            #         "ACO fitted.  Runtime: {} minutes.  Best score: {}".format(self.fit_time // 60, self.best))
+            return self.best
+        elif mode == 'max':
+            self.best = self.best_series[np.argmax(self.best_series)]
+            if verbose:
+                print(
+                    "ACO fitted.  Runtime: {} minutes.  Best score: {}".format(self.fit_time // 60, self.best))
+            return self.best
+        else:
+            raise ValueError("Invalid mode!  Choose 'min' or 'max'.")
+
+    def plot(self):
+        """
+        Plots the score over time after the model has been fitted.
+        :return: None if the model isn't fitted yet
+        """
+        if not self.fitted:
+            print("Ant Colony Optimizer not fitted!  There exists nothing to plot.")
+            return None
+        else:
+            fig, ax = plt.subplots(figsize=(20, 15))
+            ax.plot(self.best_series, label="Best Run")
+            ax.set_xlabel("Iteration")
+            ax.set_ylabel("Performance")
+            ax.text(.8, .6,
+                    'Ants: {}\nEvap Rate: {}\nIntensify: {}\nAlpha: {}\nBeta: {}\nBeta Evap: {}\nChoose Best: {}\n\nFit Time: {}m{}'.format(
+                        self.ants, self.evaporation_rate, self.pheromone_intensification, self.heuristic_alpha,
+                        self.heuristic_beta, self.beta_evaporation_rate, self.choose_best, self.fit_time // 60,
+                        ["\nStopped Early!" if self.stopped_early else ""][0]),
+                    bbox={'facecolor': 'gray', 'alpha': 0.8, 'pad': 10}, transform=ax.transAxes)
+            ax.legend()
+            plt.title("Ant Colony Optimization Results (best: {})".format(
+                np.round(self.best, 2)))
+            plt.show() 
+```
+
+
+```{python}
+#coordenades 'x' y 'y' de las ciudades
+cities = ["Palmira", "Pasto", "Tuluá", "Bogota", "Pereira", "Armenia", "Manizales", "Valledupar",
+"Montería", "Soledad", "Cartagena", "Barranquilla", "Medellín", "Bucaramanga", "Cúcuta"]
+
+
+index_cities=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+
+#Coordenadas correspondientes, fuente: https://www.geodatos.net/coordenadas
+coordns=[[3.53944, -76.30361], [1.21361, -77.28111], [4.08466, -76.19536], [4.60971, -74.08175], [4.81333, -75.69611], [4.53389, -75.68111], [5.06889, -75.51738], [10.46314, -73.25322],
+[8.74798, -75.88143], [10.91843, -74.76459], [10.39972, -75.51444], [10.96854, -74.78132], [6.25184, -75.56359], [7.12539, -73.1198], [7.89391, -72.50782]]
+
+X = [coordns[i][1] for i in range(len(coordns))]
+Y = [coordns[i][0] for i in range(len(coordns))]
+```
+
+### Adecuación de coordenadas
+
+Se adecuan coordenadas para coincidir con la proyección y se crea dataframe que se usara para hacer cálculos y conseguir matrices de solución
+
+
+```{python}
+#sistema de proyección de origen WGS84 (latitud y longitud)
+source = 'EPSG:4326'
+#sistema de proyección de destino
+target = 'EPSG:21897'
+
+#creacion transformer para la proyeccion
+transformer = pyproj.Transformer.from_crs(
+    source, target, always_xy=True)
+Xt, Yt = transformer.transform(X, Y)
+print(Xt)
+print(Yt)
+
+#creacion lista de puntos con nuevas coordenadas
+dots = [Point(x, y) for x, y in zip(Xt, Yt)]
+
+#creacion GeoDataFrame para las ciudades con las nuevas coordenadas
+gdf = gpd.GeoDataFrame(
+    {'cities': cities, 'geometry': dots})
+
+#transformacion de Point a FLOAT
+def transf(punto):
+    x, y = punto.x, punto.y
+    return float(x), float(y)
+
+#se agrega la columna el GeoDataFrame
+gdf['point_float'] = gdf['geometry'].apply(lambda punto: transf(punto))
+gdf
+```
+
+### Carga de mapa
+
+
+```{python}
+#se carga el .shp de Colombia
+mapacol = gpd.read_file('datos/colombia.shp')
+fig, ax = plt.subplots(figsize=(7, 7))
+ax.set_facecolor('#FFFFF7')
+mapacol.plot(ax=ax, color='#8A2BE2', edgecolor='gray')
+plt.title("Mapa con puntos de referencia")
+gdf.plot(ax=ax, markersize=8, color='cyan')
+for i, txt in enumerate(gdf['cities']):
+    ax.annotate(txt, (gdf['geometry'][i].x,gdf['geometry'][i].y), fontsize=8, color='black')
+
+```
+
+## Algoritmo Hormigas version
+
+### Supuestos:
+
+**Se escoge para el problema el realizarlo con el carro Cupra Formentor para el cual se tienen los siguientes datos**
+De la ficha técnica se pueden sacar los siguientes datos del carro escogido para el problema
+
+*   Consumo promedio de gasolina en carretera: 46 km/galón
+
+De los datos proporcionados por gasolinerias terpel en sus medios de comunicación se saca el precio al día de hoy el precio de la gasolina.
+*   Precio de gasolina al día de hoy(03/03/2024): 15.500
+
+De los datos proporcionados por el ministerio de trabajo se toma el dato de una hora de trabajo
+*   Sueldo básico del conductor: 5.532 por hora
+
+
+```{python}
+#se crea funcion para facilitar el calculo de distancias
+from math import sin,cos,atan2,sqrt,radians
+def distancia(coord1, coord2):
+    #se define el radio de la tierra en km
+    R = 6371.0
+
+    #se convierten a radianes las coordenadas
+    lat1, lon1 = map(radians, coord1)
+    lat2, lon2 = map(radians, coord2)
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    # se hace uso de la formula de Haversine para el calculo en kilometros de dos puntos
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    #finalmente la distancia entre los puntos
+    dista = R * c
+    return dista
+```
+
+
+```{python}
+#se crea una matriz para almacenar las distancias
+distances = [[0.0] * len(coordns) for i in range(len(coordns))]
+
+#for anidado para calcular distancias entre cada par
+for i in range(len(coordns)):
+    for j in range(i + 1, len(coordns)):
+        #se calcula la distancia usando la funcion creada anteriormente
+        dist = distancia(coordns[i], coordns[j])
+        #se almacenan las distancias redondeadas
+        distances[i][j] = round(dist,2)
+        distances[j][i] = round(dist,2)
+
+matdist = np.array(distances).reshape(15,15)
+
+```
+
+### Matriz de costos
+
+```{python}
+#se importan matrices en excel de cantidad de peajes y distancia entre lugares con formato 15x15
+#se convierten a conveniencia en dataframes
+peajes = pd.read_excel('datos/matrizpeajes.xlsx',header=None)
+matpeaj = peajes.to_numpy()
+times = pd.read_excel('datos/matriztiempos.xlsx', header=None) #en Total de Minutos
+mattime = times.to_numpy()
+```
+
+Estas matrices tienen un formato de 15x15, lo que significa que contienen información para 15 ciudades diferentes.
+Convertimos estas matrices en dataframes para facilitar su manipulación.
+
+Matriz de costos
+La matriz de costos es una representación de los costos asociados a viajar entre todas las ciudades. 
+Cada fila y cada columna representan una ciudad, y el valor en la intersección de una fila y una columna es el costo de viajar entre esas dos ciudades. 
+Este costo se calcula teniendo en cuenta el costo promedio por peaje (cp), el costo de la hora de trabajo del conductor (ht), y el precio promedio del galón de gasolina (cg).
+Ademas, convertimos el tiempo de viaje de minutos a horas y la distancia de millas a kilómetros por galón (asumiendo que nuestro vehículo hace 46 km/galón).
+Finalmente, calculamos el costo total de viaje entre cada par de ciudades como la suma del costo por peaje, el costo del tiempo del conductor, y el costo del combustible.
+
+Ejemplo de funcionamiento de matriz
+
+
+|          | Ciudad A | Ciudad B | Ciudad C |
+| Ciudad A | 0        | 1000     | 2000     |
+| Ciudad B | 1000     | 0        | 1500     |
+| Ciudad C | 2000     | 1500     | 0        |
+
+
+En este ejemplo, cada fila y cada columna representan una ciudad. Los valores en la matriz representan el costo total de viajar de una ciudad a otra. Por ejemplo, el costo de viajar de la Ciudad A a la Ciudad B es de 1000 unidades de costo.
+
+Este costo se calcula como la suma del costo por peaje, el costo del tiempo del conductor, y el costo del combustible. Por ejemplo, si el costo por peaje es de 500 unidades, el costo del tiempo del conductor es de 300 unidades, y el costo del combustible es de 200 unidades, entonces el costo total de viaje sería de 1000 unidades.
+
+```{python}
+#calculos y conversiones necesarias
+cp = 10000 #costo promedio por peaje
+ht = 5652 #hora de trabajo conductor
+cg = 15500 #precio promedio de galon de gasolina
+
+mattime = mattime/60 # Convertimos los minutos en horas
+matdist = matdist/46 # Con esta operacion conseguimos el numero de kilometros por galon (nuestro carro hace 46 km/galon)
+
+#se calcula matriz de costos
+matcost = cp*mattime + matpeaj*8000 + cg*matdist
+
+```
+
+
+```{python}
+hormigas=[5,20,45,70,100] #cantidad de hormigas a evaluar
+bestRoute=[]
+for i in range(len(hormigas)):
+    optimizer = AntColonyOptimizer(ants=hormigas[i], evaporation_rate=.1, intensification=2, alpha=1, beta=1,
+                                beta_evaporation_rate=0.5, choose_best=.1)
+    best = optimizer.fit(matcost, 100) #se inicializa con 100 iteraciones
+    optimizer.plot()
+    bestRoute.append(optimizer.best_path) #se guarda la mejor ruta para cada cantidad
+```
+
+### Se calculan los costos totales por cada recorrido
+
+
+```{python}
+#para calcular el costo total en cada recorrido
+def costos(ruta, costos):
+    costo = 0
+    for i in range(len(ruta) - 1):
+        costo += matcost[ruta[i]][ruta[i+1]]
+    return costo
+
+for i in range(len(bestRoute)):
+    print("El costo total del recorrido: $", round(costos(bestRoute[i], matcost), 2), "pesos para un total de", hormigas[i], "Hormigas")
+```
+
+El análisis de los costos totales del recorrido en función del número de hormigas en el algoritmo de las hormigas muestra que agregar mas hormigas inicialmente no garantiza una mejora en la eficiencia. Sin embargo, alrededor de las 45 hormigas, se encuentra un punto óptimo donde el costo total es mas bajo ($2,262,868.95). A partir de ese punto, seguir aumentando el número de hormigas no reduce significativamente los costos. Este resultado resalta la importancia de encontrar un equilibrio entre el número de hormigas y la eficiencia del algoritmo.
+
+
+### Soluciones en mapa
+
+```{python}
+folder_path = "datos/routesh/"
+for file_name in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, file_name)
+    if os.path.isfile(file_path):
+        os.remove(file_path)
+```
+
+```{python}
+
+imagesroute2 = []
+
+for i in range(len(bestRoute)):
+    texto = "El orden de la ruta es: "+"\n"
+    texto2 = "El costo total del recorrido es: $" + str(round(costos(bestRoute[i], matcost), 2))+" pesos"
+
+    current_sol = bestRoute[i]
+    for j in range(len(current_sol)):
+        texto += str(j+1)+"."+str(cities[current_sol[j]])+"\n"
+
+    # Aqui obtenemos la ruta segun sea la solucion
+    rutacol = [gdf.iloc[i]['geometry']for i in bestRoute[i]]
+
+    #creamos el plot de la ruta
+    fig, ax = plt.subplots(figsize=(7, 7))
+    mapacol.plot(ax=ax, color='#8A2BE2', edgecolor='gray')
+    gdf.plot(ax=ax, markersize=7, color='cyan')
+    ax.set_facecolor('#FFFFF7')
+
+    for i, txt in enumerate(gdf['cities']):
+        ax.annotate(txt, (gdf['geometry'][i].x,
+                    gdf['geometry'][i].y), fontsize=7)
+
+    gdf.plot(ax=plt.gca(), color='cyan', markersize=5, zorder=3)
+
+    plt.plot([p.x for p in rutacol], [p.y for p in rutacol],
+             color='#F781F3', linestyle='--', linewidth=1.3, dashes=[2, 2], zorder=2)
+
+    plt.text(250000, 1000000, texto, ha='center', va='center', size=6,
+             bbox=dict(boxstyle='round', facecolor='#FFF8DC', alpha=0.9))
+
+    plt.text(550000, 2000000, texto2, ha='center', va='center', size=6,
+             bbox=dict(boxstyle='round', facecolor='#FA5882', alpha=0.9))
+
+    plt.title("Problema del vendedor: Colonias de Hormigas")
+
+    name = f"datos/routesh/ruta_{random.randint(0, 100000)}.png"
+
+    imagesroute2.append(name)
+
+    plt.savefig(name)
+
+
+
+```
+
+
+```{python}
+#se crea el gif con las rutas
+with imageio.get_writer('datos/routesh/gifmapa.gif', mode='I', duration=500) as writer:
+    for ruta in imagesroute2:
+        image = imageio.imread(ruta)
+        writer.append_data(image)
+```
+
+## Algoritmos Genéticos version
+
+En este caso, vamos a utilizar la biblioteca PyGAD para implementar el algoritmo genético. 
+
+PyGAD simplifica la implementación del algoritmo genético para resolver el problema del vendedor viajero al permitir la codificación de posibles rutas como cromosomas, definir una función de aptitud para evaluar la calidad de las soluciones, aplicar operadores genéticos como selección, cruzamiento y mutación para evolucionar la población de soluciones, y finalmente, converger hacia una solución óptima o cercana a ella a lo largo de varias generaciones. Esto facilita la búsqueda de la ruta mas corta para que el vendedor visite todas las ciudades y regrese al punto de partida de manera eficiente y efectiva.
+
+
+```{python}
+# Attempting the calculation again for the cumulative probability of default over three years
+
+
+
+# Annual default probabilities
+
+default_probabilities = [0.03, 0.04, 0.06]
+
+
+
+# Calculate survival probabilities for each year
+
+survival_rates = [1 - p for p in default_probabilities]
+
+
+
+# Calculate cumulative survival over three years
+
+cumulative_survival = survival_rates[0] * survival_rates[1] * survival_rates[2]
+
+
+
+# Calculate cumulative default probability
+
+cumulative_default_probability = 1 - cumulative_survival
+
+cumulative_default_probability
+```
+
+```{python}
+
+"""
+import pygad
+import numpy as np
+
+# Definir la función de fitness con 3 parámetros
+def tsp_fitness(ga_instance, solution, s_idx):
+    # Se realizan ajustes a la solución para su iteración
+    solution = solution.tolist()
+    solution = [int(x) for x in solution]
+
+    # Se verifica que no haya ciudades repetidas
+    if len(set(solution)) != len(solution):
+        return 0  # Retorna cero si hay ciudades repetidas
+
+    # Se verifica que no falte ninguna ciudad
+    if set(solution) != set(range(len(cities))):
+        return 0  # Retorna cero si falta alguna ciudad
+
+    # Se calcula el costo total
+    distance = 0
+    for i in range(len(solution)-1):
+        distance += matcost[solution[i]][solution[i+1]]
+    distance += matcost[solution[-1]][solution[0]]  # Se cierra el ciclo
+
+    # Se retorna el inverso de la distancia
+    return 1/distance
+
+# Definir los parámetros del problema
+generations = [100, 200, 350, 500, 1200, 1500]
+bestsol = []
+sol_per_pop = 15
+initialSolutions = [list(set(np.random.permutation(len(cities))))
+                    for _ in range(sol_per_pop)]
+
+for i in range(len(generations)):
+    num_generations = generations[i]
+    
+    # Crear el algoritmo genético usando PyGAD
+    ViajeroGA = pygad.GA(num_generations=num_generations,
+                         num_parents_mating=4,
+                         sol_per_pop=sol_per_pop,
+                         num_genes=len(cities),
+                         initial_population=initialSolutions,
+                         mutation_percent_genes=30,
+                         fitness_func=tsp_fitness,  # Función corregida
+                         mutation_type="scramble",
+                         init_range_low=1,
+                         init_range_high=15,
+                         parent_selection_type="rank")
+
+    # Ejecutar el algoritmo genético
+    ViajeroGA.run()
+
+    # Obtener la mejor solución
+    solution, solution_fitness, solution_idx = ViajeroGA.best_solution()
+    solution_indices = [int(x) for x in solution.tolist()]
+    bestsol.append(solution_indices)
+    bestCity = [cities[i] for i in solution_indices]
+
+    # Imprimir la mejor solución encontrada
+    print("Mejor solución encontrada en:",
+          num_generations, "iteraciones es:", bestCity)
+
+"""
+```
+
+
+```{python}
+
+images = []
+
+def tsp_fitness(solution, s_idx):
+    #se realizan ajustes a la solucion para su iteracion
+    solution = solution.tolist()
+    solution = [int(x) for x in solution]
+
+    #se verifica que no haya ciudades repetidas
+    if len(set(solution)) != len(solution):
+        return 0  #retorna cero si hay ciudades repetidas
+
+    #se verifica que no falte ninguna ciudad
+    if set(solution) != set(range(len(cities))):
+        return 0  #retorna cero si falta alguna ciudad
+
+    #se calcula el costo total
+    distance = 0
+    for i in range(len(solution)-1):
+        distance += matcost[solution[i]][solution[i+1]]
+    distance += matcost[solution[-1]][solution[0]]  #se cierra el ciclo
+
+    #se retorna el inverso de la distancia
+    return 1/distance
+
+generations = [100, 200, 350, 500, 1200, 1500]
+bestsol = []
+sol_per_pop = 15
+initialSolutions = [list(set(np.random.permutation(index_cities)))
+                        for _ in range(sol_per_pop)]
+for i in range(len(generations)):
+    num_generations = generations[i]
+    #se crea el algoritmo genetico de la libreria pygad
+    ViajeroGA = pygad.GA(num_generations=num_generations,
+                        num_parents_mating=4,
+                        sol_per_pop=sol_per_pop,
+                        num_genes=len(cities),
+                        initial_population=initialSolutions,
+                        mutation_percent_genes=30,
+                        fitness_func=tsp_fitness,
+                        mutation_type="scramble",
+                        init_range_low=1,
+                        init_range_high=15,
+                        parent_selection_type="rank")
+    #se ejecuta el algoritmo genetico
+    ViajeroGA.run()
+
+    #se obtiene la mejor solucion
+    solution, solution_fitness, solution_idx = ViajeroGA.best_solution()
+    solution_indices = [int(x) for x in solution.tolist()]
+    bestsol.append(solution_indices)
+    bestCity = []
+    for i in solution_indices:
+        bestCity.append(cities[i])
+
+    #se imprime la mejor solucion encontrada
+    print("Mejor solución encontrada en:",
+          num_generations, "iteraciones es:", bestCity)
+
+
+```
+
+### Se calcula costos de los recorridos
+
+
+```{python}
+#se define funcion para calcular el costo total de la solucion
+def total(route, costs):
+    costs = 0
+    for i in range(len(route) - 1):
+        costs += matcost[route[i]][route[i+1]]
+    return costs
+#se imprime el costo total de cada solucion
+for i in range(len(bestsol)):
+    print("El costo total del recorrido es: ",round(total(bestsol[i],matcost),2)," pesos para un total de ", generations[i], "iteraciones")
+
+```
+
+El análisis de los costos totales del recorrido en función del número de iteraciones revela un patrón interesante: inicialmente, pocos intentos resultan eficientes en costos. Sin embargo, aumentar las iteraciones no siempre mejora la eficiencia y puede llevar a costos mas altos. Curiosamente, al extender significativamente las iteraciones, se observa una tendencia a la reducción del costo, indicando un punto óptimo de eficiencia. Este fenómeno subraya la importancia de encontrar un equilibrio adecuado entre el número de iteraciones y el costo total, destacando que mas iteraciones pueden, hasta cierto punto, optimizar los costos.
+
+### Soluciones en mapa  
+
+
+
+```{python}
+folder_path = "datos/routesb/"
+for file_name in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, file_name)
+    if os.path.isfile(file_path):
+        os.remove(file_path)
+# Lista para almacenar las rutas de las rutas de las imágenes PNG
+imagesroute1 = []
+
+for i in range(len(bestsol)):
+    texto = "La ruta es: "+"\n" # texto inical para añadir las rutas al plot
+    texto2 = "El costo total del recorrido es: $"+str(round(total(bestsol[i], matcost), 2))+" pesos" #Texto para añadir el valor de la ruta
+
+    current_sol = bestsol[i] #Obtenbemos la soulcion por iteracion
+    for j in range(len(current_sol)):
+        texto += str(cities[current_sol[j]])+"\n"
+
+    rutacol = [gdf.iloc[i]['geometry']for i in bestsol[i]] #Aqui obtenemos la ruta segun sea la solucion
+    
+    #creamos el plot de la ruta
+    fig, ax = plt.subplots(figsize=(7, 7))
+    mapacol.plot(ax=ax, color='#8A2BE2', edgecolor='gray')
+    gdf.plot(ax=ax, markersize=5, color='cyan')
+    ax.set_facecolor('#FFFFF7')
+    
+    for i, txt in enumerate(gdf['cities']):
+        ax.annotate(txt, (gdf['geometry'][i].x,
+                    gdf['geometry'][i].y), fontsize=7)
+
+    gdf.plot(ax=plt.gca(), color='cyan', markersize=7, zorder=3)
+
+    plt.plot([p.x for p in rutacol], [p.y for p in rutacol],
+             color='#F781F3', linestyle='--', linewidth=1.3, dashes=[2, 2], zorder=2)
+    
+    plt.text(250000, 1000000, texto, ha='center', va='center', size=6,
+             bbox=dict(boxstyle='round', facecolor='#FFF8DC', alpha=0.9))
+    
+    plt.text(550000, 2000000, texto2, ha='center', va='center', size=6,
+             bbox=dict(boxstyle='round', facecolor='#FA5882', alpha=0.9))
+    
+    plt.title("Problema del vendedor: Algoritmos Genéticos")
+
+    #se crea el nombre del archivo para guardar la imagen
+    name = f"datos/routesb/ruta_{random.randint(0, 100000)}.png"
+    
+    #se añade el nombre del archivo a la lista de rutas
+    imagesroute1.append(name)
+
+    #se guarda la imagen
+    plt.savefig(name)
+
+#se crea el gif con las rutas de las soluciones
+with imageio.get_writer('datos/routesb/gifmapa.gif', mode='I', duration=500) as writer:
+    for route in imagesroute1:
+        image = imageio.imread(route)
+        writer.append_data(image)
+
+```
+
+### Gif con mejores soluciones
+
+
+```{python}
+#from IPython.display import Image, display
+
+#gif1 = Image(filename="datos/routesb/gifmapa.gif")
+#gif2 = Image(filename="datos/routesh/gifmapa.gif")
+#display(gif2, gif1)
+```
+
+## Incluir GIFs en Quarto
+
+![GIF 1](datos/routesb/gifmapa.gif)
+![GIF 2](datos/routesh/gifmapa.gif)
+
+
+
+### Conclusiones
+
+* Considerando los resultados de los algoritmos de hormigas y genéticos, se puede concluir que en este caso particular, el algoritmo genético logró obtener costos totales mas bajos en comparación con el algoritmo de hormigas. Por ejemplo, con 100 iteraciones, el algoritmo genético alcanzó un costo de $2,113,791.01, mientras que el algoritmo de hormigas con 100 hormigas tuvo un costo de $2,252,472.90. Esta diferencia se mantuvo incluso al considerar un mayor número de iteraciones en el algoritmo genético. Por lo tanto, en términos de optimización de costos totales para el problema del vendedor viajero, el algoritmo genético mostró un mejor desempeño en comparación con el algoritmo de hormigas en este escenario específico.
+
+* La diferencia en el desempeño podría deberse a que el algoritmo genético puede explorar un rango mas amplio de soluciones y ajustarse mejor a diferentes configuraciones de parámetros, lo que le permite encontrar soluciones mas óptimas en un número menor de iteraciones. En cambio, el algoritmo de hormigas, al depender mas de interacciones locales, puede tener dificultades para encontrar soluciones globalmente óptimas en problemas complejos y variados, especialmente si los parámetros no están óptimamente configurados.
+
+
+
+
+## Bibliografia
+
+[1] Optimización con algoritmo genético y Nelder-Mead by Joaquín Amat Rodrigo, available under a Attribution 4.0 International (CC BY 4.0) at https://www.cienciadedatos.net/documentos/48_optimizacion_con_algoritmo_genetico
+
+[2] https://github.com/johnberroa/Ant-Colony-Optimization/blob/master/AntColonyOptimizer.py
+
+[3] Siamak Talatahari, in Metaheuristic Applications in Structures and Infrastructures, 2013,"Optimum Performance-Based Seismic Design of Frames Using Metaheuristic Optimization Algorithms", en linea: https://www.sciencedirect.com/topics/engineering/ant-colony-optimization
+
+[4] Manish Mandloi, Vimal Bhatia, in Handbook of Neural Computation, 2017,"Symbol Detection in Multiple Antenna Wireless Systems via Ant Colony Optimization", en linea: ciencedirect.com/topics/engineering/ant-colony-optimization
+
+[5] M. Dorigo, M. Birattari, y T. Stutzle, «Ant Colony Optimization», IEEE Computational Intelligence Magazine, vol. 1, n.o 4, pp. 28-39, nov. 2006, doi: 10.1109/ci-m.2006.248054.
+
+[6] O. Altay, «Comparison of Current Metaheuristic Methods in Standard Benchmark Functions», International Journal Of Pure And Applied Sciences, vol. 8, n.o 2, pp. 286-301, jun. 2022, doi: 10.29132/ijpas.1070287.
+
+[7] M. Karimi-Mamaghan, M. Mohammadi, P. Meyer, A. M. Karimi-Mamaghan, y E.-G. Talbi, «Machine learning at the service of meta-heuristics for solving combinatorial optimization problems: A state-of-the-art», European Journal Of Operational Research, vol. 296, n.o 2, pp. 393-422, ene. 2022, doi: 10.1016/j.ejor.2021.04.032.
+
+
+## Porcentaje de contribución en el equipo:
+
+Solución del primero punto: Ronald Gabriel Palencia
+Solución del segundo punto: Junior Antonio Muñoz.
+Organizar detalles finales, publicar el informe y subir al repositorio: Ronald Gabriel Palencia

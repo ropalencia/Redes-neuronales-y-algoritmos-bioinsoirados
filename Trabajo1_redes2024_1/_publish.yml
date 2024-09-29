@@ -1,8 +1,12 @@
 - source: blog_trabajo1.qmd
   quarto-pub:
-    - id: ab6ced85-7919-49ef-ae9e-f437cb11610c
-      url: 'https://palenciaronald.quarto.pub/blog_trabajo1-533f'
+    - id: 5f3abafe-68f9-4c1d-835b-9d668b892001
+      url: 'https://palenciaronald.quarto.pub/optimización-heurística'
 - source: prueba.qmd
   quarto-pub:
-    - id: 9270f4eb-6f60-44bc-941b-9eae97c234c7
-      url: 'https://quartopub.com/sites/palenciaronald/prueba'
+    - id: b71417d8-7d50-4afe-8b0e-1bddbc7b41c3
+      url: 'https://palenciaronald.quarto.pub/prueba'
+- source: informe1.qmd
+  quarto-pub:
+    - id: b0a5b787-ecfd-4db5-b685-74541364222b
+      url: 'https://palenciaronald.quarto.pub/optimización-heurística-bab4'
